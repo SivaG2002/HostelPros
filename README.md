@@ -1,5 +1,9 @@
 # Hostel Management System – Setup Guide
 
+If you have any queries or doubts feel free to text me on Whatsapp
+
+```+91 6282684814```
+
 ## 1. Prerequisites (Install Manually)
 
 Install the following software before starting:
