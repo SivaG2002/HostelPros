@@ -441,9 +441,9 @@ def get_fees():
 def get_complaints():
 
     conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="1234",
+        host=DB_CONFIG["host"],
+        user=DB_CONFIG["user"],
+        password=DB_CONFIG["password"],
         database="hostel_db"
     )
 
@@ -475,9 +475,9 @@ def update_complaint_status(complaint_id):
     status = data.get("status")
 
     conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="1234",
+        host=DB_CONFIG["host"],
+        user=DB_CONFIG["user"],
+        password=DB_CONFIG["password"],
         database="hostel_db"
     )
 
@@ -498,9 +498,9 @@ def update_complaint_status(complaint_id):
 @app.route("/api/admin/notices", methods=["GET"])
 def get_notices():
     conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="1234",
+        host= DB_CONFIG["host"],
+        user=DB_CONFIG["user"],
+        password=DB_CONFIG["password"],
         database="hostel_db"
     )
     cursor = conn.cursor(dictionary=True)
@@ -525,9 +525,9 @@ def create_notice():
     data = request.get_json()
 
     conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="1234",
+        host=DB_CONFIG["host"],
+        user=DB_CONFIG["user"],
+        password=DB_CONFIG["password"],
         database="hostel_db"
     )
     cursor = conn.cursor()

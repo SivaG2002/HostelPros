@@ -18,6 +18,7 @@ cd ..
 
 echo.
 echo Creating Python Virtual Environment...
+cd engine
 python -m venv venv
 
 echo.
