@@ -1,0 +1,6 @@
+echo Starting frontend and backend...
+start cmd /k "cd index && npm start"
+start cmd /k "cd engine && python main.py"
+echo Waiting for server to boot...
+timeout /t 6 >nul
+start http://localhost:3000/
