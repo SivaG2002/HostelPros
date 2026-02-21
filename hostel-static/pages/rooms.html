@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Rooms - CampusConnect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+
+  <script src="../js/app.js"></script>
+  <script>
+    checkAuthAndRedirect();
+  </script>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">CampusConnect</div>
+      <div class="navbar-menu">
+        <a href="admin-dashboard.html" data-page="dashboard">Dashboard</a>
+        <a href="students.html" data-page="students">Students</a>
+        <a href="rooms.html" data-page="rooms" class="active">Rooms</a>
+        <a href="notices.html" data-page="notices">Notices</a>
+        <a href="complaints.html" data-page="complaints">Complaints</a>
+        <a href="fees.html" data-page="fees">Fees</a>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <div class="flex justify-between items-center mb-6">
+      <h1>Rooms Management</h1>
+      <button class="button button-primary" onclick="openAddRoomModal()">
+        Add Room
+      </button>
+    </div>
+
+    <div id="error-container"></div>
+
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      Loading rooms...
+    </div>
+
+    <div class="card" id="table-container" style="display:none; overflow-x:auto;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Room No</th>
+            <th>Capacity</th>
+            <th>Occupied</th>
+            <th>Students</th>
+            <th>Progress</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rooms-tbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ADD ROOM MODAL -->
+  <div id="addRoomModal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+
+    <div class="card" style="width:90%; max-width:500px;">
+      <div class="card-header">
+        <h2>Add New Room</h2>
+        <button onclick="closeAddRoomModal()" style="background:none;border:none;font-size:1.5rem;">✕</button>
+      </div>
+
+      <div class="card-content">
+        <form id="addRoomForm">
+          <div class="form-group">
+            <label>Room Number</label>
+            <input type="text" required>
+          </div>
+
+          <div class="form-group">
+            <label>Capacity</label>
+            <input type="number" required>
+          </div>
+
+          <button type="submit" class="button button-primary w-full">
+            Add Room
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+    setActiveNavLink("rooms");
+
+    // ---------------- MODAL ----------------
+    function openAddRoomModal() {
+      document.getElementById("addRoomModal").style.display = "flex";
+    }
+
+    function closeAddRoomModal() {
+      document.getElementById("addRoomModal").style.display = "none";
+    }
+
+    // ---------------- LOAD ROOMS ----------------
+    async function loadRooms() {
+
+      const data = await fetchRooms();
+      document.getElementById("loading").style.display = "none";
+
+      if (!data || data.length === 0) {
+        document.getElementById("table-container").innerHTML =
+          '<div class="card text-center text-muted">No rooms found</div>';
+        return;
+      }
+
+      let rows = '';
+
+      data.forEach(room => {
+
+        const percent = room.capacity > 0
+          ? Math.min((room.occupied / room.capacity) * 100, 100)
+          : 0;
+
+        let studentList = "No students";
+
+        if (room.students && room.students.length) {
+          studentList = room.students.map(s =>
+            `${s.name}`
+          ).join("<br>");
+        }
+
+        rows += `
+          <tr>
+            <td><strong>${room.room_no}</strong></td>
+            <td>${room.capacity}</td>
+            <td>${room.occupied}/${room.capacity}</td>
+            <td>${studentList}</td>
+            <td>
+              <div style="width:120px;height:8px;background:#eee;border-radius:4px;">
+                <div style="width:${percent}%;height:100%;background:#4CAF50;"></div>
+              </div>
+            </td>
+            <td>
+              <button class="button button-secondary"
+                onclick="editCapacity('${room.id}', '${room.capacity}')">
+                Edit
+              </button>
+              <button class="button button-danger"
+                onclick="deleteRoom('${room.id}')">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("rooms-tbody").innerHTML = rows;
+      document.getElementById("table-container").style.display = "block";
+    }
+
+    // ---------------- ADD ROOM ----------------
+    document.getElementById("addRoomForm").addEventListener("submit", async function (e) {
+
+      e.preventDefault();
+
+      const inputs = this.querySelectorAll("input");
+
+      const roomData = {
+        room_no: inputs[0].value,
+        capacity: inputs[1].value
+      };
+
+      const response = await fetch(`${API_URL}/rooms/create/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(roomData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        closeAddRoomModal();
+        loadRooms();
+        this.reset();
+      } else {
+        showError(result.message || "Failed to create room");
+      }
+
+    });
+
+    // ---------------- EDIT CAPACITY ----------------
+    async function editCapacity(id, currentCapacity) {
+
+      const newCapacity = prompt("Enter new capacity:", currentCapacity);
+      if (!newCapacity) return;
+
+      await fetch(`${API_URL}/rooms/update/${id}/`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ capacity: newCapacity })
+      });
+
+      loadRooms();
+    }
+
+    // ---------------- DELETE ROOM ----------------
+    async function deleteRoom(id) {
+
+      if (!confirm("Delete this room?")) return;
+
+      await fetch(`${API_URL}/rooms/delete/${id}/`, {
+        method: "DELETE"
+      });
+
+      loadRooms();
+    }
+
+    // Initial load
+    loadRooms();
+
+  </script>
+
+</body>
+</html>

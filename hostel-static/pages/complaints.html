@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Complaints - CampusConnect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+
+<script src="../js/app.js"></script>
+<script>
+  checkAuthAndRedirect();
+</script>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">CampusConnect</div>
+    <div class="navbar-menu">
+      <a href="admin-dashboard.html" data-page="dashboard">Dashboard</a>
+      <a href="students.html" data-page="students">Students</a>
+      <a href="rooms.html" data-page="rooms">Rooms</a>
+      <a href="notices.html" data-page="notices">Notices</a>
+      <a href="complaints.html" data-page="complaints" class="active">Complaints</a>
+      <a href="fees.html" data-page="fees">Fees</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <h1>Complaints Management</h1>
+
+  <div id="error-container"></div>
+
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Loading complaints...
+  </div>
+
+  <div id="complaints-container"></div>
+
+</div>
+
+<!-- MODAL -->
+<div id="complaintModal"
+style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+
+  <div class="card" style="width:90%; max-width:600px;">
+    <div class="card-header">
+      <h2>Complaint Details</h2>
+      <button onclick="closeComplaintModal()" style="background:none;border:none;font-size:1.5rem;">✕</button>
+    </div>
+
+    <div class="card-content" id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+
+setActiveNavLink("complaints");
+
+let complaintsCache = [];
+let selectedComplaint = null;
+
+// ---------------- LOAD COMPLAINTS ----------------
+async function loadComplaints() {
+
+  const data = await fetchComplaints();
+  document.getElementById("loading").style.display = "none";
+
+  if (!data || data.length === 0) {
+    document.getElementById("complaints-container").innerHTML =
+      '<div class="card text-center text-muted">No complaints found</div>';
+    return;
+  }
+
+  complaintsCache = data;
+
+  let html = '';
+
+  data.forEach(c => {
+
+    const statusColor = {
+      "pending": "#e74c3c",
+      "in-progress": "#f39c12",
+      "resolved": "#27ae60"
+    }[c.status] || "#3498db";
+
+    html += `
+      <div class="card mb-4">
+        <div class="card-header">
+          <div>
+            <h3>${c.title}</h3>
+            <p class="card-description">
+              ${formatDate(c.created_at)} • Student: ${c.student_name}
+            </p>
+          </div>
+          <span style="background:${statusColor};color:white;padding:4px 10px;border-radius:4px;">
+            ${c.status.toUpperCase()}
+          </span>
+        </div>
+
+        <div class="card-content">
+          <p>${c.description}</p>
+          <div style="margin-top:1rem;">
+            <button class="button button-secondary"
+              onclick="openComplaintModal(${c.id})">
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById("complaints-container").innerHTML = html;
+}
+
+// ---------------- OPEN MODAL ----------------
+function openComplaintModal(id) {
+
+  selectedComplaint = complaintsCache.find(c => c.id === id);
+
+  if (!selectedComplaint) return;
+
+  document.getElementById("modalContent").innerHTML = `
+    <p><strong>Title:</strong> ${selectedComplaint.title}</p>
+    <p><strong>Description:</strong> ${selectedComplaint.description}</p>
+    <p><strong>Student:</strong> ${selectedComplaint.student_name}</p>
+    <p><strong>Status:</strong> ${selectedComplaint.status}</p>
+
+    <div style="margin-top:1.5rem; display:flex; gap:1rem;">
+
+      <button onclick="changeStatus('pending')"
+        style="background:#e74c3c;color:white;padding:8px 14px;border:none;border-radius:4px;">
+        Pending
+      </button>
+
+      <button onclick="changeStatus('in-progress')"
+        style="background:#f39c12;color:white;padding:8px 14px;border:none;border-radius:4px;">
+        In Progress
+      </button>
+
+      <button onclick="changeStatus('resolved')"
+        style="background:#27ae60;color:white;padding:8px 14px;border:none;border-radius:4px;">
+        Resolved
+      </button>
+
+    </div>
+  `;
+
+  document.getElementById("complaintModal").style.display = "flex";
+}
+
+// ---------------- CLOSE MODAL ----------------
+function closeComplaintModal() {
+  document.getElementById("complaintModal").style.display = "none";
+}
+
+// ---------------- UPDATE STATUS ----------------
+async function changeStatus(status) {
+
+  if (!selectedComplaint) return;
+
+  await fetch(`${API_URL}/complaints/update/${selectedComplaint.id}/`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: status })
+  });
+
+  closeComplaintModal();
+  loadComplaints();
+}
+
+// ---------------- INIT ----------------
+loadComplaints();
+
+</script>
+
+</body>
+</html>

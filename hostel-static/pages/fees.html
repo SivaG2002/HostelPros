@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fees - CampusConnect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+
+<script src="../js/app.js"></script>
+<script>
+  checkAuthAndRedirect();
+</script>
+
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">CampusConnect</div>
+    <div class="navbar-menu">
+      <a href="admin-dashboard.html" data-page="dashboard">Dashboard</a>
+      <a href="students.html" data-page="students">Students</a>
+      <a href="rooms.html" data-page="rooms">Rooms</a>
+      <a href="notices.html" data-page="notices">Notices</a>
+      <a href="complaints.html" data-page="complaints">Complaints</a>
+      <a href="fees.html" data-page="fees" class="active">Fees</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<div class="main-content">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h1>Fees Management</h1>
+    <button class="button button-primary" onclick="openCreateFeeModal()">
+      Create Fee
+    </button>
+  </div>
+
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Loading fees...
+  </div>
+
+  <div class="grid grid-cols-3 space-y-6" id="summary-container" style="display:none;"></div>
+
+  <div class="card mt-6" id="table-container" style="display:none; overflow-x:auto;">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Due Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="fees-tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- VIEW MODAL -->
+<div id="feeModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div class="card" style="width:90%; max-width:500px;">
+    <div class="card-header">
+      <h2>Fee Details</h2>
+      <button onclick="closeFeeModal()" style="background:none;border:none;font-size:1.5rem;">✕</button>
+    </div>
+    <div class="card-content" id="feeModalContent"></div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="editFeeModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div class="card" style="width:90%; max-width:500px;">
+    <div class="card-header">
+      <h2>Edit Fee</h2>
+      <button onclick="closeEditFeeModal()" style="background:none;border:none;font-size:1.5rem;">✕</button>
+    </div>
+    <div class="card-content">
+      <form id="editFeeForm">
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" id="editAmount" required>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="editStatus">
+            <option value="pending">Pending</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+        <button type="submit" class="button button-primary w-full">
+          Update Fee
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE MODAL -->
+<div id="createFeeModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div class="card" style="width:90%; max-width:500px;">
+    <div class="card-header">
+      <h2>Create Fee</h2>
+      <button onclick="closeCreateFeeModal()" style="background:none;border:none;font-size:1.5rem;">✕</button>
+    </div>
+    <div class="card-content">
+      <form id="createFeeForm">
+
+        <div class="form-group">
+          <label>Select Student</label>
+          <select id="studentSelect" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" id="feeAmount" required>
+        </div>
+
+        <div class="form-group">
+          <label>Due Date</label>
+          <input type="date" id="feeDueDate" required>
+        </div>
+
+        <button type="submit" class="button button-primary w-full">
+          Create Fee
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+
+setActiveNavLink("fees");
+
+let feesCache = [];
+let selectedFee = null;
+
+async function loadFees() {
+
+  const data = await fetchFees();
+  document.getElementById("loading").style.display = "none";
+
+  if (!data || data.length === 0) return;
+
+  feesCache = data;
+
+  const total = data.reduce((s,f)=>s+(f.amount||0),0);
+  const paid = data.reduce((s,f)=>s+(f.status==="paid"?f.amount:0),0);
+  const pending = total-paid;
+
+  document.getElementById("summary-container").innerHTML = `
+    <div class="card"><div class="card-content"><h3>Total</h3><strong>${formatCurrency(total)}</strong></div></div>
+    <div class="card"><div class="card-content"><h3>Paid</h3><strong style="color:green;">${formatCurrency(paid)}</strong></div></div>
+    <div class="card"><div class="card-content"><h3>Pending</h3><strong style="color:red;">${formatCurrency(pending)}</strong></div></div>
+  `;
+  document.getElementById("summary-container").style.display="grid";
+
+  let rows='';
+  data.forEach(fee=>{
+    rows+=`
+      <tr>
+        <td><strong>${fee.student_name}</strong></td>
+        <td>${formatCurrency(fee.amount)}</td>
+        <td>${fee.status}</td>
+        <td>${formatDate(fee.due_date)}</td>
+        <td>
+          <button onclick="openFeeModal(${fee.id})">View</button>
+          <button onclick="openEditFeeModal(${fee.id})">Edit</button>
+          ${fee.status==="pending"?`<button onclick="markAsPaid(${fee.id})">Mark Paid</button>`:''}
+        </td>
+      </tr>`;
+  });
+
+  document.getElementById("fees-tbody").innerHTML=rows;
+  document.getElementById("table-container").style.display="block";
+}
+
+function openFeeModal(id){
+  selectedFee=feesCache.find(f=>f.id===id);
+  document.getElementById("feeModalContent").innerHTML=`
+    <p><strong>Student:</strong> ${selectedFee.student_name}</p>
+    <p><strong>Amount:</strong> ${formatCurrency(selectedFee.amount)}</p>
+    <p><strong>Status:</strong> ${selectedFee.status}</p>
+    <p><strong>Due:</strong> ${formatDate(selectedFee.due_date)}</p>`;
+  document.getElementById("feeModal").style.display="flex";
+}
+
+function closeFeeModal(){document.getElementById("feeModal").style.display="none";}
+
+function openEditFeeModal(id){
+  selectedFee=feesCache.find(f=>f.id===id);
+  document.getElementById("editAmount").value=selectedFee.amount;
+  document.getElementById("editStatus").value=selectedFee.status;
+  document.getElementById("editFeeModal").style.display="flex";
+}
+
+function closeEditFeeModal(){document.getElementById("editFeeModal").style.display="none";}
+
+document.getElementById("editFeeForm").addEventListener("submit",async function(e){
+  e.preventDefault();
+  await fetch(`${API_URL}/fees/update/${selectedFee.id}/`,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      amount:document.getElementById("editAmount").value,
+      status:document.getElementById("editStatus").value
+    })
+  });
+  closeEditFeeModal();
+  loadFees();
+});
+
+async function markAsPaid(id){
+  await fetch(`${API_URL}/fees/mark_paid/${id}/`,{method:"PUT"});
+  loadFees();
+}
+
+async function openCreateFeeModal(){
+  const res=await fetch(`${API_URL}/students/list_all/`);
+  const students=await res.json();
+  const select=document.getElementById("studentSelect");
+  select.innerHTML='';
+  students.forEach(s=>{
+    select.innerHTML+=`<option value="${s.id}">${s.name}</option>`;
+  });
+  document.getElementById("createFeeModal").style.display="flex";
+}
+
+function closeCreateFeeModal(){
+  document.getElementById("createFeeModal").style.display="none";
+}
+
+document.getElementById("createFeeForm").addEventListener("submit",async function(e){
+  e.preventDefault();
+  await fetch(`${API_URL}/fees/create/`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      student_id:document.getElementById("studentSelect").value,
+      amount:document.getElementById("feeAmount").value,
+      due_date:document.getElementById("feeDueDate").value
+    })
+  });
+  closeCreateFeeModal();
+  loadFees();
+});
+
+loadFees();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusConnect - Quick Start Guide</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .doc-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .code-block {
+      background-color: #f5f5f5;
+      border-left: 4px solid var(--primary-color);
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      border-radius: 0.375rem;
+    }
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+    .feature-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .feature-list li:before {
+      content: "✅ ";
+      color: var(--success-color);
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">📚 CampusConnect</div>
+      <div class="navbar-menu">
+        <a href="index.html">Login</a>
+        <a href="QUICKSTART.html" class="active">Quick Start</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="doc-container">
+    <h1>🚀 CampusConnect - Quick Start Guide</h1>
+    
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>Welcome to CampusConnect!</h2>
+      </div>
+      <div class="card-content">
+        <p>This is a complete Hostel Management System built with vanilla HTML, CSS, and JavaScript. No build tools or npm packages required!</p>
+      </div>
+    </div>
+
+    <!-- Getting Started -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>⚡ Getting Started</h2>
+      </div>
+      <div class="card-content space-y-4">
+        <h3>Option 1: Using Live Server (VS Code)</h3>
+        <ol style="margin-left: 1.5rem;">
+          <li>Open the <code>hostel-static</code> folder in VS Code</li>
+          <li>Install "Live Server" extension</li>
+          <li>Right-click on <code>index.html</code> → "Open with Live Server"</li>
+          <li>App opens at <code>http://localhost:5500</code></li>
+        </ol>
+
+        <h3 style="margin-top: 1.5rem;">Option 2: Using Python</h3>
+        <div class="code-block">cd hostel-static
+python -m http.server 8000
+# Visit: http://localhost:8000</div>
+
+        <h3>Option 3: Using Node.js</h3>
+        <div class="code-block">cd hostel-static
+npx http-server
+# Starts on http://localhost:8080</div>
+      </div>
+    </div>
+
+    <!-- Login Credentials -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>🔐 Demo Credentials</h2>
+      </div>
+      <div class="card-content">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="card">
+            <div class="card-header">
+              <h3>👨‍💼 Admin Account</h3>
+            </div>
+            <div class="card-content space-y-2">
+              <div>
+                <strong>Email:</strong>
+                <div class="code-block" style="margin: 0.5rem 0;">admin@hostel.com</div>
+              </div>
+              <div>
+                <strong>Password:</strong>
+                <div class="code-block" style="margin: 0.5rem 0;">admin123</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>👨‍🎓 Student Account</h3>
+            </div>
+            <div class="card-content space-y-2">
+              <div>
+                <strong>Email:</strong>
+                <div class="code-block" style="margin: 0.5rem 0;">student@hostel.com</div>
+              </div>
+              <div>
+                <strong>Password:</strong>
+                <div class="code-block" style="margin: 0.5rem 0;">student123</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>✨ Features</h2>
+      </div>
+      <div class="card-content">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <h3>👨‍💼 Admin Features</h3>
+            <ul class="feature-list">
+              <li>Dashboard with statistics</li>
+              <li>Student management</li>
+              <li>Room management</li>
+              <li>Notice creation</li>
+              <li>Complaint tracking</li>
+              <li>Fee monitoring</li>
+            </ul>
+          </div>
+          <div>
+            <h3>👨‍🎓 Student Features</h3>
+            <ul class="feature-list">
+              <li>Personal dashboard</li>
+              <li>Fee status & payment</li>
+              <li>View notices</li>
+              <li>File complaints</li>
+              <li>View hostel rules</li>
+              <li>Room assignment info</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Structure -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>📁 Project Structure</h2>
+      </div>
+      <div class="card-content">
+        <div class="code-block">hostel-static/
+├── index.html              (Login page)
+├── QUICKSTART.html         (This file)
+├── README.md               (Full documentation)
+├── css/
+│   └── styles.css         (All CSS)
+├── js/
+│   └── app.js             (API & Helper functions)
+└── pages/
+    ├── admin-dashboard.html
+    ├── students.html
+    ├── rooms.html
+    ├── notices.html
+    ├── complaints.html
+    ├── fees.html
+    ├── student-dashboard.html
+    ├── student-fees.html
+    ├── student-notices.html
+    ├── student-complaints.html
+    └── student-rules.html</div>
+      </div>
+    </div>
+
+    <!-- Configuration -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>⚙️ Configuration</h2>
+      </div>
+      <div class="card-content space-y-4">
+        <h3>Change Backend API URL</h3>
+        <p>Edit <code>js/app.js</code> line 1:</p>
+        <div class="code-block">const API_URL = "http://localhost:5000";
+// Change to your backend URL</div>
+
+        <h3>Customize Theme Colors</h3>
+        <p>Edit <code>css/styles.css</code> CSS variables:</p>
+        <div class="code-block">:root {
+  --primary-color: #0070f3;      /* Main brand color */
+  --success-color: #10b981;      /* Success messages */
+  --danger-color: #ef4444;       /* Errors & delete */
+  --warning-color: #f59e0b;      /* Warnings */
+  /* ... more variables */
+}</div>
+      </div>
+    </div>
+
+    <!-- API Endpoints -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>🔌 API Endpoints Used</h2>
+      </div>
+      <div class="card-content">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th>Method</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/api/login</code></td>
+              <td>POST</td>
+              <td>User authentication</td>
+            </tr>
+            <tr>
+              <td><code>/api/admin/dashboard</code></td>
+              <td>GET</td>
+              <td>Admin dashboard stats</td>
+            </tr>
+            <tr>
+              <td><code>/api/admin/students</code></td>
+              <td>GET</td>
+              <td>List all students</td>
+            </tr>
+            <tr>
+              <td><code>/api/admin/rooms</code></td>
+              <td>GET</td>
+              <td>List all rooms</td>
+            </tr>
+            <tr>
+              <td><code>/api/admin/notices</code></td>
+              <td>GET</td>
+              <td>List all notices</td>
+            </tr>
+            <tr>
+              <td><code>/api/admin/complaints</code></td>
+              <td>GET</td>
+              <td>List all complaints</td>
+            </tr>
+            <tr>
+              <td><code>/api/admin/fees</code></td>
+              <td>GET</td>
+              <td>List fee records</td>
+            </tr>
+            <tr>
+              <td><code>/api/student/:id</code></td>
+              <td>GET</td>
+              <td>Get student profile</td>
+            </tr>
+            <tr>
+              <td><code>/api/student/latest-notice</code></td>
+              <td>GET</td>
+              <td>Get latest notice</td>
+            </tr>
+            <tr>
+              <td><code>/api/student/latest-complaint/:id</code></td>
+              <td>GET</td>
+              <td>Get latest complaint</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>🐛 Troubleshooting</h2>
+      </div>
+      <div class="card-content space-y-4">
+        <div style="padding: 1rem; background-color: var(--card-bg); border-left: 4px solid var(--warning-color); border-radius: 0.375rem;">
+          <h3>❓ Page shows "Loading..." indefinitely</h3>
+          <p><strong>Solution:</strong> Check that backend server is running on port 5000. Open DevTools (F12) → Console tab and check for errors.</p>
+        </div>
+
+        <div style="padding: 1rem; background-color: var(--card-bg); border-left: 4px solid var(--warning-color); border-radius: 0.375rem;">
+          <h3>❓ Login button doesn't work</h3>
+          <p><strong>Solution:</strong> Verify backend API is responding. Check Network tab (F12 → Network) for API response status and body.</p>
+        </div>
+
+        <div style="padding: 1rem; background-color: var(--card-bg); border-left: 4px solid var(--warning-color); border-radius: 0.375rem;">
+          <h3>❓ Styles look broken</h3>
+          <p><strong>Solution:</strong> Clear browser cache (Ctrl+Shift+Del). Hard refresh page (Ctrl+Shift+R). Verify CSS file path is correct.</p>
+        </div>
+
+        <div style="padding: 1rem; background-color: var(--card-bg); border-left: 4px solid var(--warning-color); border-radius: 0.375rem;">
+          <h3>❓ CORS error in console</h3>
+          <p><strong>Solution:</strong> Backend must allow CORS requests from your frontend URL. Add proper CORS headers to backend server.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Browser Support -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h2>🌐 Browser Support</h2>
+      </div>
+      <div class="card-content">
+        <p>This application works on all modern browsers:</p>
+        <ul style="margin-left: 1.5rem; line-height: 2;">
+          <li>✅ Chrome 90+</li>
+          <li>✅ Firefox 88+</li>
+          <li>✅ Safari 14+</li>
+          <li>✅ Edge 90+</li>
+          <li>✅ Mobile browsers (iOS Safari, Chrome Mobile)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="card">
+      <div class="card-header">
+        <h2>🎯 Next Steps</h2>
+      </div>
+      <div class="card-content">
+        <ol style="margin-left: 1.5rem; line-height: 2;">
+          <li><strong>Run the app:</strong> Follow the "Getting Started" section above</li>
+          <li><strong>Test both roles:</strong> Log in as admin and student to explore features</li>
+          <li><strong>Review code:</strong> Check <code>js/app.js</code> to understand API integration</li>
+          <li><strong>Customize:</strong> Edit <code>css/styles.css</code> to match your branding</li>
+          <li><strong>Deploy:</strong> Push to GitHub, Netlify, Vercel, or your own server</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem; padding: 2rem; color: var(--text-secondary);">
+      <p>Ready to get started? <a href="index.html" class="button button-primary" style="display: inline-block;">Go to Login</a></p>
+      <p style="margin-top: 1rem;">For detailed documentation, check <code>README.md</code></p>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

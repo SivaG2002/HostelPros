@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notices - CampusConnect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+
+<script src="../js/app.js"></script>
+<script>
+  checkAuthAndRedirect();
+</script>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">CampusConnect</div>
+    <div class="navbar-menu">
+      <a href="admin-dashboard.html" data-page="dashboard">Dashboard</a>
+      <a href="students.html" data-page="students">Students</a>
+      <a href="rooms.html" data-page="rooms">Rooms</a>
+      <a href="notices.html" data-page="notices" class="active">Notices</a>
+      <a href="complaints.html" data-page="complaints">Complaints</a>
+      <a href="fees.html" data-page="fees">Fees</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1>Notices</h1>
+    <button class="button button-primary" onclick="openCreateNoticeModal()">
+      Create Notice
+    </button>
+  </div>
+
+  <div id="error-container"></div>
+  <div id="success-container"></div>
+
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Loading notices...
+  </div>
+
+  <div id="notices-container"></div>
+
+</div>
+
+<!-- CREATE MODAL -->
+<div id="createNoticeModal"
+  style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+
+  <div class="card" style="width:90%; max-width:600px;">
+    <div class="card-header">
+      <h2>Create Notice</h2>
+      <button onclick="closeCreateNoticeModal()" style="background:none;border:none;font-size:1.5rem;">✕</button>
+    </div>
+
+    <div class="card-content">
+      <form id="createNoticeForm">
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea rows="6" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select required>
+            <option value="">Select Category</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="event">Event</option>
+            <option value="rule">Rule Change</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <button type="submit" class="button button-primary w-full">
+          Create Notice
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+
+setActiveNavLink("notices");
+
+// ---------- MODAL ----------
+function openCreateNoticeModal() {
+  document.getElementById("createNoticeModal").style.display = "flex";
+}
+
+function closeCreateNoticeModal() {
+  document.getElementById("createNoticeModal").style.display = "none";
+}
+
+// ---------- LOAD NOTICES ----------
+async function loadNotices() {
+
+  const data = await fetchNotices();
+  document.getElementById("loading").style.display = "none";
+
+  if (!data || data.length === 0) {
+    document.getElementById("notices-container").innerHTML =
+      '<div class="card text-center text-muted">No notices found</div>';
+    return;
+  }
+
+  let html = '';
+
+  data.forEach(notice => {
+    html += `
+      <div class="card mb-4">
+        <div class="card-header">
+          <div>
+            <h3>${notice.title}</h3>
+            <p class="card-description">
+              ${formatDate(notice.created_at)}
+            </p>
+          </div>
+          <span class="badge badge-primary">
+            ${notice.category || 'General'}
+          </span>
+        </div>
+        <div class="card-content">
+          <p>${notice.description}</p>
+          <div style="margin-top:1rem;display:flex;gap:1rem;">
+            <button class="button button-danger"
+              onclick="deleteNotice('${notice.id}')">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById("notices-container").innerHTML = html;
+}
+
+// ---------- CREATE NOTICE ----------
+document.getElementById("createNoticeForm")
+.addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+
+  const inputs = this.querySelectorAll("input, textarea, select");
+
+  const noticeData = {
+    title: inputs[0].value,
+    description: inputs[1].value,
+    category: inputs[2].value
+  };
+
+  const response = await fetch(`${API_URL}/notices/create/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(noticeData)
+  });
+
+  const result = await response.json();
+
+  if (response.ok) {
+    closeCreateNoticeModal();
+    showSuccess("Notice created successfully");
+    loadNotices();
+    this.reset();
+  } else {
+    showError(result.message || "Failed to create notice");
+  }
+
+});
+
+// ---------- DELETE NOTICE ----------
+async function deleteNotice(id) {
+
+  if (!confirm("Delete this notice?")) return;
+
+  await fetch(`${API_URL}/notices/delete/${id}/`, {
+    method: "DELETE"
+  });
+
+  loadNotices();
+}
+
+// Initial load
+loadNotices();
+
+</script>
+
+</body>
+</html>

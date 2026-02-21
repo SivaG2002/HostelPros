@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostel Rules - CampusConnect</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <script src="../js/app.js"></script>
+  <script>
+    checkAuthAndRedirect();
+    if (getUserRole() !== "student") {
+      window.location.href = "admin-dashboard.html";
+    }
+  </script>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">📚 CampusConnect</div>
+      <div class="navbar-menu">
+        <a href="student-dashboard.html" data-page="dashboard">Dashboard</a>
+        <a href="student-fees.html" data-page="fees">Fees</a>
+        <a href="student-notices.html" data-page="notices">Notices</a>
+        <a href="student-complaints.html" data-page="complaints">Complaints</a>
+        <a href="student-rules.html" data-page="rules" class="active">Rules</a>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Hostel Rules & Regulations</h1>
+    
+    <div class="grid gap-6">
+      <!-- General Rules -->
+      <div class="card">
+        <div class="card-header">
+          <h2>📋 General Rules</h2>
+        </div>
+        <div class="card-content space-y-4">
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">1. Curfew Timing</h3>
+            <p class="text-muted">All students must be in their rooms by 10:00 PM on weekdays and 11:00 PM on weekends.</p>
+          </div>
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">2. Guest Policy</h3>
+            <p class="text-muted">Guests are allowed between 10:00 AM and 6:00 PM. Parents/guardians can visit on weekends with prior intimation.</p>
+          </div>
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">3. Room Cleanliness</h3>
+            <p class="text-muted">Students are responsible for maintaining their rooms clean. Weekly inspections will be conducted.</p>
+          </div>
+          <div style="padding: 0.75rem 0;">
+            <h3 style="margin-bottom: 0.25rem;">4. Electronic Appliances</h3>
+            <p class="text-muted">Only registered appliances are allowed. Heavy load devices like microwaves are prohibited in rooms.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conduct Rules -->
+      <div class="card">
+        <div class="card-header">
+          <h2>🤝 Code of Conduct</h2>
+        </div>
+        <div class="card-content space-y-4">
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">1. Respect & Discipline</h3>
+            <p class="text-muted">All students must behave respectfully towards hostel staff and fellow residents.</p>
+          </div>
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">2. No Loud Noise</h3>
+            <p class="text-muted">Avoid making loud noises that disturb others, especially during sleeping hours (10:00 PM - 7:00 AM).</p>
+          </div>
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">3. Substance Prohibition</h3>
+            <p class="text-muted">Smoking, alcohol, and drugs are strictly prohibited in the hostel premises.</p>
+          </div>
+          <div style="padding: 0.75rem 0;">
+            <h3 style="margin-bottom: 0.25rem;">4. Item Safety</h3>
+            <p class="text-muted">The hostel is not responsible for loss or theft of personal belongings. Keep valuables secure.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Safety Rules -->
+      <div class="card">
+        <div class="card-header">
+          <h2>🚨 Safety & Emergency</h2>
+        </div>
+        <div class="card-content space-y-4">
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">1. Emergency Evacuation</h3>
+            <p class="text-muted">Familiarize yourself with emergency exits. Participate in evacuation drills regularly.</p>
+          </div>
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">2. Fire Safety</h3>
+            <p class="text-muted">Do not tamper with fire extinguishers or emergency equipment. Report any hazardous conditions immediately.</p>
+          </div>
+          <div style="padding: 0.75rem 0;">
+            <h3 style="margin-bottom: 0.25rem;">3. Medical Emergency</h3>
+            <p class="text-muted">Report any medical emergencies to the warden immediately. First aid is available at the office.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meals & Mess -->
+      <div class="card">
+        <div class="card-header">
+          <h2>🍽️ Mess Management</h2>
+        </div>
+        <div class="card-content space-y-4">
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">1. Meal Timings</h3>
+            <p class="text-muted">Breakfast: 7:00 - 8:30 AM | Lunch: 1:00 - 2:00 PM | Dinner: 7:30 - 9:00 PM</p>
+          </div>
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">2. Leave Intimation</h3>
+            <p class="text-muted">Inform the warden at least 2 days in advance if you won't be taking mess for a day.</p>
+          </div>
+          <div style="padding: 0.75rem 0;">
+            <h3 style="margin-bottom: 0.25rem;">3. Dietary Restrictions</h3>
+            <p class="text-muted">Vegetarian and special dietary requirements can be arranged. Contact the warden to register.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fees & Payment -->
+      <div class="card">
+        <div class="card-header">
+          <h2>💰 Fees & Payment</h2>
+        </div>
+        <div class="card-content space-y-4">
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">1. Payment Due Date</h3>
+            <p class="text-muted">All fees must be paid by the 10th of every month through the online portal.</p>
+          </div>
+          <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 0.25rem;">2. Late Payment</h3>
+            <p class="text-muted">Late payment fees apply for amounts paid after the due date. Check the portal for details.</p>
+          </div>
+          <div style="padding: 0.75rem 0;">
+            <h3 style="margin-bottom: 0.25rem;">3. Damage Charges</h3>
+            <p class="text-muted">Any damage to hostel property will be charged to the student's account.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grievance Redressal -->
+      <div class="card">
+        <div class="card-header">
+          <h2>📞 Grievance Redressal</h2>
+        </div>
+        <div class="card-content space-y-4">
+          <p>If you have any complaints or grievances, you can:</p>
+          <ul style="margin-left: 1.5rem; line-height: 2;">
+            <li>Contact your block warden directly</li>
+            <li>File a complaint through the online portal</li>
+            <li>Reach out to the hostel administration office</li>
+          </ul>
+          <div style="margin-top: 1rem; padding: 1rem; background-color: var(--card-bg); border-radius: 0.375rem;">
+            <strong>📍 Admin Office:</strong> Block A, Ground Floor | <strong>📞 Phone:</strong> +91-9876-543-210
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    setActiveNavLink("rules");
+  </script>
+</body>
+</html>
