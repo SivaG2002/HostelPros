@@ -13,15 +13,18 @@ import {
   SidebarInset
 } from '@/components/ui/sidebar';
 
-import { Bell, BookOpenCheck, LayoutDashboard, ListTodo, Wallet } from 'lucide-react';
+import { Bell, BookOpenCheck, LayoutDashboard, ListTodo, Utensils, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
 const navItems = [
+  { href: '/student/rules', icon: BookOpenCheck, label: 'Rules' } ,
   { href: '/student/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/student/fees', icon: Wallet, label: 'My Fees' },
+  { href: '/student/mess', icon: Utensils, label: 'Mess' },
   { href: '/student/complaints', icon: ListTodo, label: 'Complaints' },
   { href: '/student/notices', icon: Bell, label: 'Notices' },
+ 
 ];
 
 export function StudentLayoutContent({

@@ -237,35 +237,115 @@ def admin_dashboard():
 
 @app.route("/api/admin/students", methods=["GET"])
 def get_students():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT 
+            u.id,
+            u.name,
+            u.email,
+            s.rollNo,
+            s.dept,
+            s.year,
+            s.phone,
+            s.is_active,
+            s.leave_reason,
+            r.roomNo
+        FROM users u
+        JOIN students s ON u.id = s.user_id
+        LEFT JOIN rooms r ON s.room_id = r.id
+        WHERE u.role = 'student'
+    """)
+
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)
+
+@app.route("/api/admin/student/activity/<int:user_id>", methods=["PUT"])
+def update_student_activity(user_id):
+    data = request.json
+    is_active = data.get("is_active")
+    leave_reason = data.get("leave_reason")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE students
+        SET is_active = %s,
+            leave_reason = %s
+        WHERE user_id = %s
+    """, (is_active, leave_reason, user_id))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Activity updated"})
+
+
+# @app.route("/api/admin/student/remove/<int:user_id>", methods=["DELETE"])
+@app.route("/api/admin/student/remove/<int:user_id>", methods=["DELETE"])
+def remove_student(user_id):
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    query = """
-SELECT 
-    u.id,
-    u.name,
-    u.email,
-    s.rollNo,
-    s.dept,
-    s.year,
-    s.phone,
-    r.roomNo
-FROM users u
-JOIN students s ON u.id = s.user_id
-LEFT JOIN rooms r ON s.room_id = r.id
-WHERE u.role = 'student'
-"""
+    # Get full student data
+    cursor.execute("""
+        SELECT 
+            u.id AS user_id,
+            u.name,
+            u.email,
+            s.rollNo,
+            s.dept,
+            s.year,
+            s.phone
+        FROM users u
+        JOIN students s ON u.id = s.user_id
+        WHERE u.id = %s
+    """, (user_id,))
 
+    student = cursor.fetchone()
 
+    if not student:
+        cursor.close()
+        conn.close()
+        return jsonify({"message": "Student not found"}), 404
 
-    cursor.execute(query)
-    students = cursor.fetchall()
+    # Insert into permanently deleted table
+    cursor.execute("""
+        INSERT INTO permanently_deleted_students
+        (user_id, name, email, rollNo, dept, year, phone)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+    """, (
+        student["user_id"],
+        student["name"],
+        student["email"],
+        student["rollNo"],
+        student["dept"],
+        student["year"],
+        student["phone"]
+    ))
 
+    # Delete child tables first
+    cursor.execute("DELETE FROM payments WHERE studentId = %s", (user_id,))
+    cursor.execute("DELETE FROM complaints WHERE student_id = %s", (user_id,))
+    cursor.execute("DELETE FROM allocations WHERE studentId = %s", (user_id,))
+    cursor.execute("DELETE FROM students WHERE user_id = %s", (user_id,))
+
+    # Delete user
+    cursor.execute("DELETE FROM users WHERE id = %s", (user_id,))
+
+    conn.commit()
     cursor.close()
     conn.close()
 
-    return jsonify(students)
+    return jsonify({"message": "Student permanently removed"}), 200
+
 
 
 @app.route("/api/admin/available-rooms", methods=["GET"])
@@ -467,6 +547,27 @@ def get_complaints():
     conn.close()
 
     return jsonify(rows)
+
+@app.route("/api/admin/deleted-students", methods=["GET"])
+def get_deleted_students():
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT *
+        FROM permanently_deleted_students
+        ORDER BY deleted_at DESC
+    """)
+
+    data = cursor.fetchall()
+    print("Deleted students:", data)
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data), 200
+
 
 
 @app.route("/api/admin/complaints/<int:complaint_id>", methods=["PUT"])

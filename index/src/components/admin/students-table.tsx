@@ -1,24 +1,61 @@
 'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+
+const API_URL = "http://localhost:5000";
 
 type Student = {
   id: number;
   name: string;
   email: string;
   rollNo: string;
-  dept: string;
-  year: number;
-  phone: string;
   roomNo: string | null;
+  is_active: boolean;
+  leave_reason: string | null;
 };
 
-export function StudentsTable({ data }: { data: Student[] }) {
+export function StudentsTable({
+  data,
+  refresh,
+  refreshDeleted
+}: {
+  data: Student[];
+  refresh: () => void;
+  refreshDeleted: () => void;
+}) {
+
+  const toggleActivity = async (id: number, current: boolean) => {
+    await fetch(`${API_URL}/api/admin/student/activity/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_active: !current })
+    });
+
+    refresh();
+  };
+
+  const removeStudent = async (id: number) => {
+    if (!confirm("Are you sure you want to permanently remove this student?"))
+      return;
+
+    await fetch(`${API_URL}/api/admin/student/remove/${id}`, {
+      method: "DELETE",
+    });
+
+    refresh();
+    refreshDeleted();
+  };
 
   return (
     <div className="rounded-md border">
@@ -28,12 +65,14 @@ export function StudentsTable({ data }: { data: Student[] }) {
             <TableHead>Student</TableHead>
             <TableHead>Roll No</TableHead>
             <TableHead>Room</TableHead>
-            <TableHead></TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {data.map((student) => {
+          {data.map(student => {
+
             const initials = student.name
               .split(" ")
               .map(n => n[0])
@@ -41,9 +80,9 @@ export function StudentsTable({ data }: { data: Student[] }) {
 
             return (
               <TableRow key={student.id}>
-                <TableCell className="font-medium">
+                <TableCell>
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-9 w-9">
+                    <Avatar>
                       <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
                     <div>
@@ -58,34 +97,48 @@ export function StudentsTable({ data }: { data: Student[] }) {
                 <TableCell>{student.rollNo}</TableCell>
 
                 <TableCell>
-                  {student.roomNo ? (
-                    <Badge variant="outline">
-                      Room {student.roomNo}
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary">
-                      Unassigned
-                    </Badge>
-                  )}
+                  {student.roomNo
+                    ? <Badge variant="outline">Room {student.roomNo}</Badge>
+                    : <Badge variant="secondary">Unassigned</Badge>
+                  }
                 </TableCell>
 
                 <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
+                  {student.is_active ? (
+                    <Badge className="bg-green-500 text-white">
+                      Active
+                    </Badge>
+                  ) : (
+                    <div>
+                      <Badge variant="destructive">
+                        Inactive
+                      </Badge>
 
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-destructive">
-                        Remove
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                      {student.leave_reason && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {student.leave_reason}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </TableCell>
+
+                <TableCell className="space-x-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => toggleActivity(student.id, student.is_active)}
+                  >
+                    {student.is_active ? "Mark Inactive" : "Mark Active"}
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => removeStudent(student.id)}
+                  >
+                    Remove
+                  </Button>
                 </TableCell>
 
               </TableRow>
