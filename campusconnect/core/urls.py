@@ -21,4 +21,11 @@ urlpatterns = [
     path('fees/mark_paid/<int:fee_id>/', views.mark_fee_paid),  
     path('fees/update/<int:fee_id>/', views.update_fee),
     path('fees/create/', views.create_fee),
+    path('student/dashboard/<int:user_id>/', views.student_dashboard),
+    path('complaints/latest/', views.latest_complaint),
+    path('notices/latest/', views.latest_notice),
+    path('fees/student/<int:user_id>/', views.student_fees),
+    path('complaints/student/<int:user_id>/', views.student_complaints),
+    path('complaints/create/', views.create_complaint),
+    
 ]

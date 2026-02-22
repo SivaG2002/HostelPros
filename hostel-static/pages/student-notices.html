@@ -2,85 +2,118 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Student Notices - CampusConnect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notices - CampusConnect</title>
   <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
-  <script src="../js/app.js"></script>
-  <script>
-    checkAuthAndRedirect();
-    if (getUserRole() !== "student") {
-      window.location.href = "admin-dashboard.html";
-    }
-  </script>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-brand">📚 CampusConnect</div>
-      <div class="navbar-menu">
-        <a href="student-dashboard.html" data-page="dashboard">Dashboard</a>
-        <a href="student-fees.html" data-page="fees">Fees</a>
-        <a href="student-notices.html" data-page="notices" class="active">Notices</a>
-        <a href="student-complaints.html" data-page="complaints">Complaints</a>
-        <a href="student-rules.html" data-page="rules">Rules</a>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-    </div>
-  </nav>
+<script src="../js/app.js"></script>
+<script>
+  checkAuthAndRedirect();
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <h1>Notices</h1>
-    
-    <div id="error-container"></div>
-    <div id="loading" class="loading">
-      <div class="spinner"></div>
-      Loading notices...
-    </div>
+  // Restrict admin
+  if (getUserRole() !== "student") {
+    window.location.href = "admin-dashboard.html";
+  }
+</script>
 
-    <!-- Notices Container -->
-    <div id="notices-container">
-      <!-- Will be populated by JavaScript -->
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">CampusConnect</div>
+    <div class="navbar-menu">
+      <a href="student-dashboard.html" data-page="dashboard">Dashboard</a>
+      <a href="student-fees.html" data-page="fees">Fees</a>
+      <a href="student-notices.html" data-page="notices" class="active">Notices</a>
+      <a href="student-complaints.html" data-page="complaints">Complaints</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
+</nav>
 
-  <script>
-    setActiveNavLink("notices");
+<!-- MAIN -->
+<div class="main-content">
 
-    async function loadNotices() {
-      const data = await fetchNotices();
-      const loadingEl = document.getElementById("loading");
-      loadingEl.style.display = "none";
+  <h1>Notices</h1>
 
-      if (data.length === 0) {
-        document.getElementById("notices-container").innerHTML = '<div class="card text-center text-muted">No notices available</div>';
-        return;
-      }
+  <div id="error-container"></div>
 
-      let html = '';
-      data.forEach(notice => {
-        html += `
-          <div class="card mb-4">
-            <div class="card-header">
-              <div>
-                <h3>${notice.title}</h3>
-                <p class="card-description">${formatDate(notice.created_at)}</p>
-              </div>
-              <span class="badge badge-primary">${notice.category || 'General'}</span>
-            </div>
-            <div class="card-content">
-              <p>${notice.description}</p>
-            </div>
-          </div>
-        `;
-      });
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Loading notices...
+  </div>
 
-      document.getElementById("notices-container").innerHTML = html;
+  <div id="notices-container"></div>
+
+</div>
+
+<script>
+
+setActiveNavLink("notices");
+
+async function loadStudentNotices() {
+
+  try {
+
+    const response = await fetch(`${API_URL}/notices/`);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch notices");
     }
 
-    loadNotices();
-  </script>
+    const data = await response.json();
+
+    document.getElementById("loading").style.display = "none";
+
+    if (!data || data.length === 0) {
+      document.getElementById("notices-container").innerHTML = `
+        <div class="card text-center text-muted">
+          No notices available
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+
+    data.forEach(notice => {
+
+      html += `
+        <div class="card mb-4">
+          <div class="card-header">
+            <div>
+              <h3>${notice.title || "-"}</h3>
+              <p class="card-description">
+                ${formatDate(notice.created_at)}
+              </p>
+            </div>
+            <span class="badge badge-primary">
+              ${notice.category || "General"}
+            </span>
+          </div>
+          <div class="card-content">
+            <p>${notice.description || "-"}</p>
+          </div>
+        </div>
+      `;
+    });
+
+    document.getElementById("notices-container").innerHTML = html;
+
+  } catch (error) {
+
+    document.getElementById("loading").style.display = "none";
+    showError("Unable to load notices.");
+    console.error(error);
+
+  }
+}
+
+loadStudentNotices();
+
+</script>
+
 </body>
 </html>

@@ -2,217 +2,188 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Dashboard - CampusConnect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
-  <script src="../js/app.js"></script>
-  <script>
-    checkAuthAndRedirect();
-    
-    
-  </script>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-brand">📚 CampusConnect</div>
-      <div class="navbar-menu">
-        <a href="student-dashboard.html" data-page="dashboard" class="active">Dashboard</a>
-        <a href="student-fees.html" data-page="fees">Fees</a>
-        <a href="student-notices.html" data-page="notices">Notices</a>
-        <a href="student-complaints.html" data-page="complaints">Complaints</a>
-        <a href="student-rules.html" data-page="rules">Rules</a>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-    </div>
-  </nav>
+<script src="../js/app.js"></script>
+<script>
+  checkAuthAndRedirect();
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <h1>Dashboard</h1>
-    
-    <div id="error-container"></div>
-    <div id="loading" class="loading">
-      <div class="spinner"></div>
-      Loading dashboard...
-    </div>
+  if (getUserRole() !== "student") {
+    window.location.href = "admin-dashboard.html";
+  }
+</script>
 
-    <!-- Dashboard Content -->
-    <div id="dashboard-content" style="display: none;">
-      <div class="grid grid-cols-3 space-y-6">
-        <!-- Profile Card -->
-        <div class="card" id="profile-card">
-          <div class="card-header">
-            <div class="card-title flex gap-2">👤 My Profile</div>
-          </div>
-          <div class="card-content space-y-4" id="profile-content">
-            <!-- Will be populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Fees Card -->
-        <div class="card" id="fees-card">
-          <div class="card-header">
-            <div class="card-title flex gap-2">💰 Fees</div>
-          </div>
-          <div class="card-content space-y-4" id="fees-content">
-            <!-- Will be populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Room Info Card -->
-        <div class="card" id="room-card">
-          <div class="card-header">
-            <div class="card-title flex gap-2">🏠 Room Info</div>
-          </div>
-          <div class="card-content space-y-4" id="room-content">
-            <!-- Will be populated by JavaScript -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Notice -->
-      <div class="card mt-6" id="notice-card" style="display: none;">
-        <div class="card-header">
-          <div class="card-title flex gap-2">📢 Latest Notice</div>
-        </div>
-        <div class="card-content space-y-4" id="notice-content">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
-
-      <!-- Recent Complaint -->
-      <div class="card mt-6" id="complaint-card" style="display: none;">
-        <div class="card-header">
-          <div class="card-title flex gap-2">📋 Latest Complaint</div>
-        </div>
-        <div class="card-content space-y-4" id="complaint-content">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">CampusConnect</div>
+    <div class="navbar-menu">
+      <a href="student-dashboard.html" data-page="dashboard" class="active">Dashboard</a>
+      <a href="student-fees.html" data-page="fees">Fees</a>
+      <a href="student-notices.html" data-page="notices">Notices</a>
+      <a href="student-complaints.html" data-page="complaints">Complaints</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
+</nav>
 
-  <script>
-    setActiveNavLink("dashboard");
+<!-- MAIN -->
+<div class="main-content">
 
-    async function loadStudentDashboard() {
-      const userId = getUserId();
-      if (!userId) {
-        showError("User ID not found");
-        return;
-      }
+  <h1>Dashboard</h1>
 
-      const [student, latestNotice, latestComplaint] = await Promise.all([
-        fetchStudentData(userId),
-        fetchLatestNotice(),
-        fetchLatestComplaint(userId)
-      ]);
+  <div id="error-container"></div>
 
-      const loadingEl = document.getElementById("loading");
-      loadingEl.style.display = "none";
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Loading dashboard...
+  </div>
 
-      const dashboardContent = document.getElementById("dashboard-content");
-      dashboardContent.style.display = "block";
+  <div id="dashboard-content" style="display:none;">
 
-      if (student) {
-        // Profile Card
-        const profileHtml = `
-          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-            <span>Name:</span>
-            <strong>${student.name}</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-top: 1px solid var(--border-color);">
-            <span>Email:</span>
-            <strong>${student.email}</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-top: 1px solid var(--border-color);">
-            <span>Roll No:</span>
-            <strong>${student.roll_no || "N/A"}</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-top: 1px solid var(--border-color);">
-            <span>Phone:</span>
-            <strong>${student.phone || "N/A"}</strong>
-          </div>
-        `;
-        document.getElementById("profile-content").innerHTML = profileHtml;
+    <div class="grid grid-cols-3 space-y-6">
 
-        // Fees Card
-        const feesStatus = student.fees_paid ? "✅ Paid" : "⏳ Pending";
-        const feesColor = student.fees_paid ? "var(--success-color)" : "var(--danger-color)";
-        const feesHtml = `
-          <div style="text-align: center;">
-            <div class="stat-value" style="color: ${feesColor};">${feesStatus}</div>
-            <div class="stat-label">${formatCurrency(student.fees_amount || 0)}</div>
-            <a href="student-fees.html" class="button button-primary w-full mt-6">
-              View Details
-            </a>
-          </div>
-        `;
-        document.getElementById("fees-content").innerHTML = feesHtml;
+      <!-- PROFILE -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">My Profile</div>
+        </div>
+        <div class="card-content" id="profile-content"></div>
+      </div>
 
-        // Room Card
-        const roomHtml = `
-          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-            <span>Room No:</span>
-            <strong>${student.room_no || "Not Assigned"}</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-top: 1px solid var(--border-color);">
-            <span>Block:</span>
-            <strong>${student.block || "N/A"}</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-top: 1px solid var(--border-color);">
-            <span>Floor:</span>
-            <strong>${student.floor || "N/A"}</strong>
-          </div>
-        `;
-        document.getElementById("room-content").innerHTML = roomHtml;
-      }
+      <!-- FEES -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Fees Summary</div>
+        </div>
+        <div class="card-content" id="fees-content"></div>
+      </div>
 
-      // Latest Notice
-      if (latestNotice && latestNotice.title) {
-        document.getElementById("notice-card").style.display = "block";
-        const noticeHtml = `
-          <h3>${latestNotice.title}</h3>
-          <p class="text-muted">${formatDate(latestNotice.created_at)}</p>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-            ${latestNotice.description}
-          </div>
-          <a href="student-notices.html" class="button button-primary w-full mt-6">
-            View All Notices
-          </a>
-        `;
-        document.getElementById("notice-content").innerHTML = noticeHtml;
-      }
+      <!-- ROOM -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Room Info</div>
+        </div>
+        <div class="card-content" id="room-content"></div>
+      </div>
 
-      // Latest Complaint
-      if (latestComplaint && latestComplaint.title) {
-        document.getElementById("complaint-card").style.display = "block";
-        const status = latestComplaint.status || "pending";
-        const statusBadgeClass = status === "resolved" ? "badge-success" : "badge-warning";
-        const complaintHtml = `
-          <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-              <h3>${latestComplaint.title}</h3>
-              <p class="text-muted">${formatDate(latestComplaint.created_at)}</p>
-            </div>
-            <span class="badge ${statusBadgeClass}">${status}</span>
-          </div>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-            ${latestComplaint.description}
-          </div>
-          <a href="student-complaints.html" class="button button-primary w-full mt-6">
-            View All Complaints
-          </a>
-        `;
-        document.getElementById("complaint-content").innerHTML = complaintHtml;
-      }
+    </div>
+
+    <!-- NOTICE -->
+    <div class="card mt-6" id="notice-card" style="display:none;">
+      <div class="card-header">
+        <div class="card-title">Latest Notice</div>
+      </div>
+      <div class="card-content" id="notice-content"></div>
+    </div>
+
+    <!-- COMPLAINT -->
+    <div class="card mt-6" id="complaint-card" style="display:none;">
+      <div class="card-header">
+        <div class="card-title">Latest Complaint</div>
+      </div>
+      <div class="card-content" id="complaint-content"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+setActiveNavLink("dashboard");
+
+async function loadStudentDashboard() {
+
+  const userId = getUserId();
+  if (!userId) {
+    showError("User session invalid.");
+    return;
+  }
+
+  try {
+
+    const dashboardData = await fetch(`${API_URL}/student/dashboard/${userId}/`)
+      .then(res => res.json());
+
+    const latestNotice = await fetchLatestNotice();
+    const latestComplaint = await fetchLatestComplaint(userId);
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("dashboard-content").style.display = "block";
+
+    // PROFILE
+    document.getElementById("profile-content").innerHTML = `
+      <p><strong>Name:</strong> ${dashboardData.name || "-"}</p>
+      <p><strong>Email:</strong> ${dashboardData.email || "-"}</p>
+    `;
+
+    // FEES
+    const paid = dashboardData.fees_paid;
+    const total = dashboardData.total_fees || 0;
+    const pending = dashboardData.pending_fees || 0;
+    const statusColor = paid ? "green" : "red";
+
+    document.getElementById("fees-content").innerHTML = `
+      <div style="text-align:center;">
+        <h2 style="color:${statusColor};">
+          ${paid ? "All Fees Paid" : "Pending Fees"}
+        </h2>
+        <p>Total: ${formatCurrency(total)}</p>
+        <p>Pending: ${formatCurrency(pending)}</p>
+        <a href="student-fees.html" class="button button-primary w-full mt-6">
+          View Full Details
+        </a>
+      </div>
+    `;
+
+    // ROOM
+    if (dashboardData.room_no) {
+      document.getElementById("room-content").innerHTML = `
+        <p><strong>Room Number:</strong> ${dashboardData.room_no}</p>
+        <p><strong>Capacity:</strong> ${dashboardData.room_capacity}</p>
+        <p><strong>Occupied:</strong> ${dashboardData.room_occupied}</p>
+      `;
+    } else {
+      document.getElementById("room-content").innerHTML = `
+        <p style="color:red;">Room not assigned yet.</p>
+      `;
     }
 
-    // Load dashboard on page load
-    loadStudentDashboard();
-  </script>
+    // NOTICE
+    if (latestNotice && latestNotice.title) {
+      document.getElementById("notice-card").style.display = "block";
+      document.getElementById("notice-content").innerHTML = `
+        <h3>${latestNotice.title}</h3>
+        <p>${formatDate(latestNotice.created_at)}</p>
+        <p>${latestNotice.description}</p>
+      `;
+    }
+
+    // COMPLAINT
+    if (latestComplaint && latestComplaint.title) {
+      document.getElementById("complaint-card").style.display = "block";
+      document.getElementById("complaint-content").innerHTML = `
+        <h3>${latestComplaint.title}</h3>
+        <p>${formatDate(latestComplaint.created_at)}</p>
+        <p>Status: ${latestComplaint.status}</p>
+      `;
+    }
+
+  } catch (error) {
+    console.error(error);
+    showError("Failed to load dashboard.");
+  }
+}
+
+loadStudentDashboard();
+
+</script>
+
 </body>
 </html>

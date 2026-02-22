@@ -71,10 +71,10 @@ def list_students(request):
             "id": s.id,
             "name": s.user.name,
             "email": s.user.email,
-            "roll_no": s.rollNo,
-            "phone": s.phone,
+            "roll_no": s.roll_no,
+            "phone": s.user.phone if hasattr(s.user, "phone") else None,
             "room_no": s.room.roomNo if s.room else None,
-            "is_active": s.is_active   # ← Added this
+            "is_active": s.user.is_active if hasattr(s.user, "is_active") else True   # ← Added this
         })
 
     return Response(data)
@@ -236,7 +236,7 @@ def list_rooms(request):
             student_list.append({
                 "id": s.id,
                 "name": s.user.name,
-                "roll_no": s.rollNo
+                "roll_no": s.roll_no
             })
 
         data.append({
@@ -353,7 +353,7 @@ def list_fees(request):
     for f in fees:
         data.append({
             "id": f.id,
-            "student_name": f.student.name if f.student else "N/A",
+            "student_name": f.student.user.name if f.student else "N/A",
             "roll_no": "N/A",  # you don't store roll number in User
             "amount": float(f.amount),
             "status": f.status,
@@ -418,9 +418,160 @@ def create_fee(request):
             amount=amount,
             status="pending",
             due_date=due_date
+            
         )
 
         return Response({"message": "Fee created successfully"})
 
     except User.DoesNotExist:
         return Response({"message": "Student not found"}, status=404)   
+    
+@api_view(['GET'])
+def student_dashboard(request, user_id):
+
+    try:
+        # Get user
+        user = User.objects.get(id=user_id, role="student")
+
+        # Get student record
+        student = Student.objects.filter(user=user).first()
+
+        # Get room
+        room = student.room if student else None
+
+        # Calculate occupancy AFTER room is defined
+        if room:
+            occupied_count = Student.objects.filter(room=room).count()
+        else:
+            occupied_count = 0
+
+        # Get fees
+        student = Student.objects.filter(user=user).first()
+
+        fees = Fee.objects.filter(student=student) if student else []
+        total_amount = sum([float(f.amount) for f in fees])
+        pending_amount = sum([float(f.amount) for f in fees if f.status == "pending"])
+
+        return Response({
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "total_fees": total_amount,
+            "pending_fees": pending_amount,
+            "fees_paid": pending_amount == 0,
+
+            "room_no": room.roomNo if room else None,   # use correct field name
+            "room_capacity": room.capacity if room else None,
+            "room_occupied": occupied_count
+        })
+
+    except User.DoesNotExist:
+        return Response({"message": "Student not found"}, status=404)
+
+@api_view(['GET'])
+def latest_complaint(request):
+
+    user_id = request.GET.get('user_id')
+
+    if not user_id:
+        return Response({"message": "User ID required"}, status=400)
+
+    complaint = Complaint.objects.filter(student_id=user_id)\
+                                  .order_by('-created_at')\
+                                  .first()
+
+    if not complaint:
+        return Response({})
+
+    return Response({
+        "id": complaint.id,
+        "title": complaint.title,
+        "description": complaint.description,
+        "status": complaint.status,
+        "created_at": complaint.created_at
+    })
+
+
+@api_view(['GET'])
+def latest_notice(request):
+
+    notice = Notice.objects.order_by('-created_at').first()
+
+    if not notice:
+        return Response({})
+
+    return Response({
+        "id": notice.id,
+        "title": notice.title,
+        "description": notice.description,
+        "category": notice.category,
+        "created_at": notice.created_at
+    })
+
+@api_view(['GET'])
+def student_fees(request, user_id):
+
+    student = Student.objects.filter(user_id=user_id).first()
+    if not student:
+        return Response([])
+
+    fees = Fee.objects.filter(student=student)
+
+    data = [{
+        "id": f.id,
+        "amount": float(f.amount),
+        "status": f.status,
+        "due_date": f.due_date,
+        "semester": f.semester
+    } for f in fees]
+
+    return Response(data)
+
+@api_view(['DELETE'])
+def delete_student(request, id):
+
+    try:
+        student = Student.objects.get(id=id)
+        user = student.user
+
+        student.delete()   # deletes student + fees (cascade)
+        user.delete()      # deletes user
+
+        return Response({"message": "Student deleted successfully"})
+
+    except Student.DoesNotExist:
+        return Response({"message": "Student not found"}, status=404)
+    
+@api_view(['GET'])
+def student_complaints(request, user_id):
+
+    complaints = Complaint.objects.filter(student_id=user_id).order_by('-created_at')
+
+    data = [{
+        "id": c.id,
+        "title": c.title,
+        "description": c.description,
+        "status": c.status,
+        "created_at": c.created_at
+    } for c in complaints]
+
+    return Response(data)
+
+@api_view(['POST'])
+def create_complaint(request):
+
+    user_id = request.data.get("user_id")
+
+    try:
+        user = User.objects.get(id=user_id, role="student")
+    except User.DoesNotExist:
+        return Response({"message": "Student not found"}, status=404)
+
+    complaint = Complaint.objects.create(
+        student=user,
+        title=request.data.get("title"),
+        description=request.data.get("description"),
+        status="pending"
+    )
+
+    return Response({"message": "Complaint created successfully"})

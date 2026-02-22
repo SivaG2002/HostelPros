@@ -22,7 +22,7 @@ function login(email, password) {
 
 function logout() {
   localStorage.removeItem("user");
-  window.location.href = "index.html";
+  window.location.href = "/hostel-static/index.html";
 }
 
 function getUser() {
@@ -158,3 +158,19 @@ function formatDate(dateString) {
   const options = { year: "numeric", month: "short", day: "numeric" };
   return new Date(dateString).toLocaleDateString("en-IN", options);
 }
+
+
+function fetchLatestNotice() {
+  return fetch(`${API_URL}/notices/latest/`)
+    .then(res => res.json())
+    .catch(() => null);
+}
+
+function fetchLatestComplaint(userId) {
+  return fetch(`${API_URL}/complaints/latest/?user_id=${userId}`)
+    .then(res => res.json())
+    .catch(() => null);
+}
+
+
+

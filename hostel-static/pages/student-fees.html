@@ -2,138 +2,151 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>My Fees - CampusConnect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fees - CampusConnect</title>
   <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
-  <script src="../js/app.js"></script>
-  <script>
-    checkAuthAndRedirect();
-    if (getUserRole() !== "student") {
-      window.location.href = "admin-dashboard.html";
-    }
-  </script>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-brand">📚 CampusConnect</div>
-      <div class="navbar-menu">
-        <a href="student-dashboard.html" data-page="dashboard">Dashboard</a>
-        <a href="student-fees.html" data-page="fees" class="active">Fees</a>
-        <a href="student-notices.html" data-page="notices">Notices</a>
-        <a href="student-complaints.html" data-page="complaints">Complaints</a>
-        <a href="student-rules.html" data-page="rules">Rules</a>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-    </div>
-  </nav>
+<script src="../js/app.js"></script>
+<script>
+  checkAuthAndRedirect();
+  if (getUserRole() !== "student") {
+    window.location.href = "admin-dashboard.html";
+  }
+</script>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <h1>My Fees</h1>
-    
-    <div id="error-container"></div>
-    <div id="loading" class="loading">
-      <div class="spinner"></div>
-      Loading fees information...
-    </div>
-
-    <!-- Fees Cards -->
-    <div class="grid grid-cols-2 space-y-6" id="fees-container" style="display: none;">
-      <!-- Will be populated by JavaScript -->
-    </div>
-
-    <!-- Payment History -->
-    <div class="card mt-6" id="history-container" style="display: none;">
-      <div class="card-header">
-        <h2>Payment History</h2>
-      </div>
-      <div class="card-content">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Semester</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th>Paid On</th>
-            </tr>
-          </thead>
-          <tbody id="history-tbody">
-            <!-- Will be populated by JavaScript -->
-          </tbody>
-        </table>
-      </div>
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">CampusConnect</div>
+    <div class="navbar-menu">
+      <a href="student-dashboard.html">Dashboard</a>
+      <a href="student-fees.html" class="active">Fees</a>
+      <a href="student-notices.html">Notices</a>
+      <a href="student-complaints.html">Complaints</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
+</nav>
 
-  <script>
-    setActiveNavLink("fees");
+<div class="main-content">
 
-    async function loadStudentFees() {
-      const userId = getUserId();
-      const student = await fetchStudentData(userId);
-      
-      const loadingEl = document.getElementById("loading");
-      loadingEl.style.display = "none";
+  <h1>My Fees</h1>
 
-      if (!student) {
-        showError("Failed to load fees information");
-        return;
-      }
+  <div id="error-container"></div>
 
-      const feesStatus = student.fees_paid ? "Paid" : "Pending";
-      const feesStatusColor = student.fees_paid ? "var(--success-color)" : "var(--danger-color)";
-      const feesAmount = student.fees_amount || 0;
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Loading fees...
+  </div>
 
-      const feesHtml = `
-        <div class="card shadow-lg">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Total Fees</div>
-              <div class="stat-value">${formatCurrency(feesAmount)}</div>
-            </div>
-          </div>
-        </div>
+  <div class="grid grid-cols-3 space-y-6" id="summary-container" style="display:none;"></div>
 
-        <div class="card shadow-lg">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Payment Status</div>
-              <div class="stat-value" style="color: ${feesStatusColor};">${feesStatus}</div>
-            </div>
-          </div>
-          ${!student.fees_paid ? `
-            <div class="card-content mt-4">
-              <button class="button button-success w-full" onclick="initiatePayment()">Pay Online</button>
-            </div>
-          ` : ''}
-        </div>
-      `;
-
-      document.getElementById("fees-container").innerHTML = feesHtml;
-      document.getElementById("fees-container").style.display = "grid";
-
-      // Load payment history
-      const historyHtml = `
+  <div class="card mt-6" id="table-container" style="display:none;">
+    <table class="table">
+      <thead>
         <tr>
-          <td>2024-2025</td>
-          <td>${formatCurrency(feesAmount)}</td>
-          <td><span class="badge ${student.fees_paid ? 'badge-success' : 'badge-warning'}">${feesStatus}</span></td>
-          <td>${student.fees_paid ? '2024-09-15' : '—'}</td>
+          <th>Semester</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Due Date</th>
+        </tr>
+      </thead>
+      <tbody id="fees-tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+
+setActiveNavLink("fees");
+
+async function loadStudentFees() {
+
+  const userId = getUserId();
+  if (!userId) return;
+
+  try {
+
+    const response = await fetch(`${API_URL}/fees/student/${userId}/`);
+    const data = await response.json();
+
+    document.getElementById("loading").style.display = "none";
+
+    if (!data || data.length === 0) {
+      document.getElementById("error-container").innerHTML =
+        `<div class="card text-center">No fee records found.</div>`;
+      return;
+    }
+
+    // -------- SUMMARY --------
+    const total = data.reduce((s, f) => s + f.amount, 0);
+    const paid = data
+      .filter(f => f.status === "paid")
+      .reduce((s, f) => s + f.amount, 0);
+    const pending = total - paid;
+
+    document.getElementById("summary-container").innerHTML = `
+      <div class="card">
+        <div class="card-content">
+          <h3>Total Fees</h3>
+          <strong>${formatCurrency(total)}</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <h3>Paid</h3>
+          <strong style="color:green;">${formatCurrency(paid)}</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <h3>Pending</h3>
+          <strong style="color:red;">${formatCurrency(pending)}</strong>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("summary-container").style.display = "grid";
+
+    // -------- TABLE --------
+    let rows = '';
+
+    data.forEach(fee => {
+
+      const badgeColor =
+        fee.status === "paid" ? "#27ae60" : "#e67e22";
+
+      rows += `
+        <tr>
+          <td>${fee.semester || "N/A"}</td>
+          <td>${formatCurrency(fee.amount)}</td>
+          <td>
+            <span style="background:${badgeColor};color:white;padding:4px 10px;border-radius:4px;">
+              ${fee.status.toUpperCase()}
+            </span>
+          </td>
+          <td>${formatDate(fee.due_date)}</td>
         </tr>
       `;
+    });
 
-      document.getElementById("history-tbody").innerHTML = historyHtml;
-      document.getElementById("history-container").style.display = "block";
-    }
+    document.getElementById("fees-tbody").innerHTML = rows;
+    document.getElementById("table-container").style.display = "block";
 
-    function initiatePayment() {
-      alert("Payment gateway integration would go here");
-    }
+  } catch (error) {
+    console.error(error);
+    showError("Failed to load fees.");
+  }
+}
 
-    loadStudentFees();
-  </script>
+loadStudentFees();
+
+</script>
+
 </body>
 </html>

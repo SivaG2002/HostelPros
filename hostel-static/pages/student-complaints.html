@@ -2,162 +2,212 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Student Complaints - CampusConnect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Complaints - CampusConnect</title>
   <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
-  <script src="../js/app.js"></script>
-  <script>
-    checkAuthAndRedirect();
-    if (getUserRole() !== "student") {
-      window.location.href = "admin-dashboard.html";
-    }
-  </script>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-brand">📚 CampusConnect</div>
-      <div class="navbar-menu">
-        <a href="student-dashboard.html" data-page="dashboard">Dashboard</a>
-        <a href="student-fees.html" data-page="fees">Fees</a>
-        <a href="student-notices.html" data-page="notices">Notices</a>
-        <a href="student-complaints.html" data-page="complaints" class="active">Complaints</a>
-        <a href="student-rules.html" data-page="rules">Rules</a>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-    </div>
-  </nav>
+<script src="../js/app.js"></script>
+<script>
+  checkAuthAndRedirect();
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <div class="flex justify-between items-center mb-6">
-      <h1>My Complaints</h1>
-      <button class="button button-primary" onclick="openComplaintModal()">
-        ➕ File Complaint
-      </button>
-    </div>
-    
-    <div id="error-container"></div>
-    <div id="success-container"></div>
-    <div id="loading" class="loading">
-      <div class="spinner"></div>
-      Loading complaints...
-    </div>
+  if (getUserRole() !== "student") {
+    window.location.href = "admin-dashboard.html";
+  }
+</script>
 
-    <!-- Complaints Container -->
-    <div id="complaints-container">
-      <!-- Will be populated by JavaScript -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">CampusConnect</div>
+    <div class="navbar-menu">
+      <a href="student-dashboard.html">Dashboard</a>
+      <a href="student-fees.html">Fees</a>
+      <a href="student-notices.html">Notices</a>
+      <a href="student-complaints.html" class="active">Complaints</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
+</nav>
 
-  <!-- File Complaint Modal -->
-  <div id="complaintModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
-    <div class="card" style="width: 90%; max-width: 500px;">
-      <div class="card-header">
-        <h2>File New Complaint</h2>
-        <button onclick="closeComplaintModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">✕</button>
-      </div>
-      <div class="card-content space-y-4">
-        <form id="complaintForm">
-          <div class="form-group">
-            <label>Title</label>
-            <input type="text" required>
-          </div>
-          <div class="form-group">
-            <label>Category</label>
-            <select required>
-              <option value="">Select Category</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="cleanliness">Cleanliness</option>
-              <option value="water">Water Issue</option>
-              <option value="electricity">Electricity</option>
-              <option value="wifi">WiFi Issue</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Description</label>
-            <textarea rows="5" required></textarea>
-          </div>
-          <button type="submit" class="button button-primary w-full">File Complaint</button>
-        </form>
-      </div>
-    </div>
+<div class="main-content">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1>My Complaints</h1>
+    <button class="button button-primary" onclick="openComplaintModal()">
+      ➕ File Complaint
+    </button>
   </div>
 
-  <script>
-    setActiveNavLink("complaints");
+  <div id="error-container"></div>
+  <div id="success-container"></div>
 
-    function openComplaintModal() {
-      document.getElementById("complaintModal").style.display = "flex";
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    Loading complaints...
+  </div>
+
+  <div id="complaints-container"></div>
+
+</div>
+
+<!-- MODAL -->
+<div id="complaintModal"
+style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+
+  <div class="card" style="width:90%; max-width:500px;">
+    <div class="card-header">
+      <h2>File New Complaint</h2>
+      <button onclick="closeComplaintModal()" style="background:none;border:none;font-size:1.5rem;">✕</button>
+    </div>
+
+    <div class="card-content">
+      <form id="complaintForm">
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="complaintTitle" required>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="complaintCategory" required>
+            <option value="">Select Category</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="cleanliness">Cleanliness</option>
+            <option value="water">Water Issue</option>
+            <option value="electricity">Electricity</option>
+            <option value="wifi">WiFi Issue</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="complaintDescription" rows="5" required></textarea>
+        </div>
+
+        <button type="submit" class="button button-primary w-full">
+          Submit Complaint
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+
+setActiveNavLink("complaints");
+
+function openComplaintModal() {
+  document.getElementById("complaintModal").style.display = "flex";
+}
+
+function closeComplaintModal() {
+  document.getElementById("complaintModal").style.display = "none";
+}
+
+// ---------------- LOAD COMPLAINTS ----------------
+async function loadComplaints() {
+
+  try {
+    const userId = getUserId();
+
+    const response = await fetch(`${API_URL}/complaints/student/${userId}/`);
+
+    if (!response.ok) throw new Error("Failed to fetch complaints");
+
+    const data = await response.json();
+
+    document.getElementById("loading").style.display = "none";
+
+    if (!data || data.length === 0) {
+      document.getElementById("complaints-container").innerHTML =
+        '<div class="card text-center text-muted">No complaints filed yet</div>';
+      return;
     }
 
-    function closeComplaintModal() {
-      document.getElementById("complaintModal").style.display = "none";
-    }
+    let html = '';
 
-    async function loadComplaints() {
-      const userId = getUserId();
-      
-      // In a real app, you'd fetch from an API endpoint for the current student
-      const mockData = [
-        {
-          id: "1",
-          title: "Water leakage in room",
-          category: "maintenance",
-          description: "There's water leaking from the ceiling in the corner of the room.",
-          status: "in-progress",
-          created_at: "2024-12-10"
-        },
-        {
-          id: "2",
-          title: "Dirty common area",
-          category: "cleanliness",
-          description: "The common area needs cleaning.",
-          status: "resolved",
-          created_at: "2024-12-01"
-        }
-      ];
+    data.forEach(c => {
 
-      const loadingEl = document.getElementById("loading");
-      loadingEl.style.display = "none";
+      const statusColor = {
+        "pending": "badge-warning",
+        "in-progress": "badge-primary",
+        "resolved": "badge-success"
+      }[c.status] || "badge-warning";
 
-      if (mockData.length === 0) {
-        document.getElementById("complaints-container").innerHTML = '<div class="card text-center text-muted">No complaints filed yet</div>';
-        return;
-      }
-
-      let html = '';
-      mockData.forEach(complaint => {
-        const statusColors = {
-          'pending': 'badge-warning',
-          'in-progress': 'badge-primary',
-          'resolved': 'badge-success'
-        };
-        const badgeClass = statusColors[complaint.status] || 'badge-primary';
-
-        html += `
-          <div class="card mb-4">
-            <div class="card-header">
-              <div>
-                <h3>${complaint.title}</h3>
-                <p class="card-description">${formatDate(complaint.created_at)} • ${complaint.category}</p>
-              </div>
-              <span class="badge ${badgeClass}">${complaint.status.toUpperCase()}</span>
+      html += `
+        <div class="card mb-4">
+          <div class="card-header">
+            <div>
+              <h3>${c.title}</h3>
+              <p class="card-description">
+                ${formatDate(c.created_at)} • ${c.category}
+              </p>
             </div>
-            <div class="card-content">
-              <p>${complaint.description}</p>
-            </div>
+            <span class="badge ${statusColor}">
+              ${c.status.toUpperCase()}
+            </span>
           </div>
-        `;
-      });
+          <div class="card-content">
+            <p>${c.description}</p>
+          </div>
+        </div>
+      `;
+    });
 
-      document.getElementById("complaints-container").innerHTML = html;
-    }
+    document.getElementById("complaints-container").innerHTML = html;
 
+  } catch (error) {
+    document.getElementById("loading").style.display = "none";
+    showError("Failed to load complaints.");
+    console.error(error);
+  }
+}
+
+// ---------------- CREATE COMPLAINT ----------------
+document.getElementById("complaintForm")
+.addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+
+  try {
+
+    const userId = getUserId();
+
+    const response = await fetch(`${API_URL}/complaints/create/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: userId,
+        title: document.getElementById("complaintTitle").value,
+        category: document.getElementById("complaintCategory").value,
+        description: document.getElementById("complaintDescription").value
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) throw new Error(result.message);
+
+    closeComplaintModal();
+    showSuccess("Complaint submitted successfully");
+    this.reset();
     loadComplaints();
-  </script>
+
+  } catch (error) {
+    showError("Failed to submit complaint.");
+    console.error(error);
+  }
+
+});
+
+loadComplaints();
+
+</script>
+
 </body>
 </html>
