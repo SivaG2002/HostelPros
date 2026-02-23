@@ -1,19 +1,15 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 from django.db.models import F, Count, Sum
 from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
-
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
 from reportlab.lib.utils import ImageReader
-
 from .models import User, Room, Complaint, Fee, Student, Notice
-
 import razorpay
 import io
 import os
