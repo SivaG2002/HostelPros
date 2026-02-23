@@ -13,7 +13,7 @@ from .models import User, Room, Complaint, Fee, Student, Notice
 import razorpay
 import io
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 # ---------------- LOGIN ----------------
@@ -159,7 +159,7 @@ def create_student(request):
         user = User.objects.create(
             name=name,
             email=email,
-            password=make_password(password),
+            password=password, 
             role="student",
             phone=phone,
             is_active=True
@@ -645,12 +645,14 @@ def create_payment_order(request, fee_id):
         return Response({"message": "Fee not found"}, status=404)
     
 
+from django.utils import timezone
 
 @api_view(['POST'])
 def verify_payment(request):
 
     payment_id = request.data.get("payment_id")
     order_id = request.data.get("order_id")
+    signature = request.data.get("signature")
     fee_id = request.data.get("fee_id")
 
     try:
@@ -660,19 +662,31 @@ def verify_payment(request):
             auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
         )
 
+        # Verify signature
         client.utility.verify_payment_signature({
             'razorpay_order_id': order_id,
             'razorpay_payment_id': payment_id,
-            'razorpay_signature': request.data.get("signature")
+            'razorpay_signature': signature
         })
 
+        # SAVE PAYMENT DATA
         fee.status = "paid"
+        fee.payment_id = payment_id
+        fee.order_id = order_id
+        fee.paid_at = timezone.now()
         fee.save()
 
         return Response({"message": "Payment successful"})
 
+    except Fee.DoesNotExist:
+        return Response({"message": "Fee not found"}, status=404)
+
+    except razorpay.errors.SignatureVerificationError:
+        return Response({"message": "Signature verification failed"}, status=400)
+
     except Exception as e:
-        return Response({"message": "Verification failed"}, status=400)    
+        print(str(e))
+        return Response({"message": "Verification failed"}, status=400)  
     
 
 
@@ -683,6 +697,7 @@ def download_receipt(request, fee_id):
     from core.models import Fee
 
     fee = Fee.objects.get(id=fee_id)
+   
 
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer, pagesize=A4)
@@ -731,10 +746,10 @@ def download_receipt(request, fee_id):
         ["Receipt No", f"GWPC-REC-{fee.id}"],
         ["Student Name", fee.student.user.name],
         ["Semester", fee.semester],
-        ["Amount Paid", f"₹ {fee.amount}"],
+        ["Amount Paid", f"Rs. {fee.amount}"],
         ["Payment Status", fee.status],
-        ["Transaction ID", getattr(fee, 'transaction_id', 'N/A')],
-        ["Payment Date", datetime.now().strftime("%d-%m-%Y %H:%M")]
+        ["Transaction ID", fee.payment_id if fee.payment_id else "N/A"],
+        ["Payment Date", fee.paid_at.strftime("%d-%m-%Y %H:%M") if fee.paid_at else "N/A"]
     ]
 
     table = Table(receipt_data, colWidths=[150, 330])

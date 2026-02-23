@@ -69,3 +69,6 @@ class Fee(models.Model):
     status = models.CharField(max_length=20, default="pending")
     due_date = models.DateField()
     semester = models.CharField(max_length=50)
+    payment_id = models.CharField(max_length=200, null=True, blank=True)
+    order_id = models.CharField(max_length=200, null=True, blank=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
