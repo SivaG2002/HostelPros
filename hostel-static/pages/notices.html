@@ -1,203 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Notices - CampusConnect</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/styles.css">
+<meta charset="UTF-8">
+<title>Notices - CampusConnect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+
+<style>
+
+  .brand-font {
+font-family: "Bitcount Grid Double", system-ui;
+font-size: medium;
+font-weight: 100;
+letter-spacing: 2px;
+}
+body {
+font-family: 'Inter', sans-serif;
+transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Sidebar */
+#sidebar { width: 250px; }
+
+/* Cards */
+.card {
+background: white;
+border: 1px solid black;
+border-radius: 12px;
+padding: 1.25rem;
+}
+
+/* Buttons */
+.button {
+background: black;
+color: white;
+padding: 0.5rem 1rem;
+border-radius: 8px;
+transition: opacity 0.2s ease;
+}
+
+.button:hover { opacity: 0.85; }
+
+.button-danger { background: black; }
+
+/* Scrollable notices container */
+.notice-scroll {
+max-height: 500px;
+overflow-y: auto;
+}
+
+/* Modal */
+.modal-overlay {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.5);
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+}
+
+/* Dark Mode */
+.dark-mode {
+background: #0f172a;
+color: white;
+}
+
+.dark-mode .card {
+background: #1e293b;
+border: 1px solid black;
+}
+</style>
 </head>
 
-<body>
+<body class="flex">
 
 <script src="../js/app.js"></script>
 <script>
-  checkAuthAndRedirect();
+checkAuthAndRedirect();
 </script>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="navbar-container">
-    <div class="navbar-brand">CampusConnect</div>
-    <div class="navbar-menu">
-      <a href="admin-dashboard.html" data-page="dashboard">Dashboard</a>
-      <a href="students.html" data-page="students">Students</a>
-      <a href="rooms.html" data-page="rooms">Rooms</a>
-      <a href="notices.html" data-page="notices" class="active">Notices</a>
-      <a href="complaints.html" data-page="complaints">Complaints</a>
-      <a href="fees.html" data-page="fees">Fees</a>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-  </div>
+<!-- Sidebar -->
+<aside id="sidebar"
+class="fixed top-0 left-0 h-full bg-black text-white p-6 flex flex-col justify-between transform transition-transform duration-300">
+
+<div>
+<div class="flex items-center gap-3 mb-8">
+<img src="../assets/logo/lo.jpg" class="w-10 h-10 object-contain">
+<span class="text-lg text-white brand-font">CampusConnect</span>
+</div>
+
+<nav class="flex flex-col gap-4">
+<a href="admin-dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="rooms.html">Rooms</a>
+<a href="fees.html">Fees</a>
+<a href="notices.html" class="font-semibold">Notices</a>
+<a href="complaints.html">Complaints</a>
+
 </nav>
+</div>
 
-<!-- MAIN -->
-<div class="main-content">
+<button class="button mt-6" onclick="logout()">Logout</button>
+</aside>
 
-  <div class="flex justify-between items-center mb-6">
-    <h1>Notices</h1>
-    <button class="button button-primary" onclick="openCreateNoticeModal()">
-      Create Notice
-    </button>
-  </div>
+<!-- Main Content -->
+<div id="mainContent" class="flex-1 ml-[250px] p-8 transition-all duration-300">
 
-  <div id="error-container"></div>
-  <div id="success-container"></div>
+<!-- Top Bar -->
+<div class="flex items-center mb-8 relative">
+<button onclick="toggleSidebar()" class="button">☰</button>
 
-  <div id="loading" class="loading">
-    <div class="spinner"></div>
-    Loading notices...
-  </div>
+<h1 class="absolute left-1/2 transform -translate-x-1/2 text-2xl font-semibold">
+Notices
+</h1>
 
-  <div id="notices-container"></div>
+<div class="ml-auto">
+<label class="flex items-center cursor-pointer">
+<input type="checkbox" id="themeToggle" class="hidden">
+<div class="w-12 h-6 bg-gray-300 rounded-full relative transition">
+<div id="toggleCircle"
+class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition"></div>
+</div>
+</label>
+</div>
+</div>
+
+<div class="flex justify-end mb-6">
+<button class="button" onclick="openCreateNoticeModal()">Create Notice</button>
+</div>
+
+<div id="error-container"></div>
+<div id="success-container"></div>
+
+<div id="loading" class="mb-4">Loading notices...</div>
+
+<div id="notices-container" class="notice-scroll"></div>
 
 </div>
 
-<!-- CREATE MODAL -->
-<div id="createNoticeModal"
-  style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+<!-- Create Notice Modal -->
+<div id="createNoticeModal" class="modal-overlay">
+<div class="card" style="width:90%; max-width:600px;">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-semibold">Create Notice</h2>
+<button onclick="closeCreateNoticeModal()">✕</button>
+</div>
 
-  <div class="card" style="width:90%; max-width:600px;">
-    <div class="card-header">
-      <h2>Create Notice</h2>
-      <button onclick="closeCreateNoticeModal()" style="background:none;border:none;font-size:1.5rem;">✕</button>
-    </div>
+<form id="createNoticeForm" class="space-y-4">
+<input type="text" placeholder="Title" required class="w-full border p-2 rounded">
+<textarea rows="6" placeholder="Description" required class="w-full border p-2 rounded"></textarea>
+<select required class="w-full border p-2 rounded">
+<option value="">Select Category</option>
+<option value="maintenance">Maintenance</option>
+<option value="event">Event</option>
+<option value="rule">Rule Change</option>
+<option value="other">Other</option>
+</select>
 
-    <div class="card-content">
-      <form id="createNoticeForm">
-
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" required>
-        </div>
-
-        <div class="form-group">
-          <label>Description</label>
-          <textarea rows="6" required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Category</label>
-          <select required>
-            <option value="">Select Category</option>
-            <option value="maintenance">Maintenance</option>
-            <option value="event">Event</option>
-            <option value="rule">Rule Change</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-
-        <button type="submit" class="button button-primary w-full">
-          Create Notice
-        </button>
-
-      </form>
-    </div>
-  </div>
+<button type="submit" class="button w-full">Create Notice</button>
+</form>
+</div>
 </div>
 
 <script>
 
+/* Sidebar Toggle */
+const sidebar = document.getElementById("sidebar");
+const mainContent = document.getElementById("mainContent");
+let isOpen = true;
+
+function toggleSidebar() {
+if (isOpen) {
+sidebar.style.transform = "translateX(-100%)";
+mainContent.style.marginLeft = "0";
+} else {
+sidebar.style.transform = "translateX(0)";
+mainContent.style.marginLeft = "250px";
+}
+isOpen = !isOpen;
+}
+
+/* Dark Mode */
+const toggle = document.getElementById("themeToggle");
+const circle = document.getElementById("toggleCircle");
+
+toggle.addEventListener("change", () => {
+document.body.classList.toggle("dark-mode");
+circle.style.transform = toggle.checked ? "translateX(24px)" : "translateX(0)";
+});
+
+/* ===== ORIGINAL LOGIC BELOW (UNCHANGED) ===== */
+
 setActiveNavLink("notices");
 
-// ---------- MODAL ----------
 function openCreateNoticeModal() {
-  document.getElementById("createNoticeModal").style.display = "flex";
+document.getElementById("createNoticeModal").style.display = "flex";
 }
 
 function closeCreateNoticeModal() {
-  document.getElementById("createNoticeModal").style.display = "none";
+document.getElementById("createNoticeModal").style.display = "none";
 }
 
-// ---------- LOAD NOTICES ----------
 async function loadNotices() {
 
-  const data = await fetchNotices();
-  document.getElementById("loading").style.display = "none";
+const data = await fetchNotices();
+document.getElementById("loading").style.display = "none";
 
-  if (!data || data.length === 0) {
-    document.getElementById("notices-container").innerHTML =
-      '<div class="card text-center text-muted">No notices found</div>';
-    return;
-  }
-
-  let html = '';
-
-  data.forEach(notice => {
-    html += `
-      <div class="card mb-4">
-        <div class="card-header">
-          <div>
-            <h3>${notice.title}</h3>
-            <p class="card-description">
-              ${formatDate(notice.created_at)}
-            </p>
-          </div>
-          <span class="badge badge-primary">
-            ${notice.category || 'General'}
-          </span>
-        </div>
-        <div class="card-content">
-          <p>${notice.description}</p>
-          <div style="margin-top:1rem;display:flex;gap:1rem;">
-            <button class="button button-danger"
-              onclick="deleteNotice('${notice.id}')">
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-
-  document.getElementById("notices-container").innerHTML = html;
+if (!data || data.length === 0) {
+document.getElementById("notices-container").innerHTML =
+'<div class="card text-center">No notices found</div>';
+return;
 }
 
-// ---------- CREATE NOTICE ----------
+let html = '';
+
+data.forEach(notice => {
+html += `
+<div class="card mb-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-semibold">${notice.title}</h3>
+<p class="text-sm opacity-70">${formatDate(notice.created_at)}</p>
+</div>
+<span class="px-3 py-1 text-sm bg-black text-white rounded">
+${notice.category || 'General'}
+</span>
+</div>
+
+<div class="mt-4">
+<p>${notice.description}</p>
+<div class="mt-4">
+<button class="button"
+onclick="deleteNotice('${notice.id}')">Delete</button>
+</div>
+</div>
+</div>
+`;
+});
+
+document.getElementById("notices-container").innerHTML = html;
+}
+
 document.getElementById("createNoticeForm")
 .addEventListener("submit", async function(e) {
 
-  e.preventDefault();
+e.preventDefault();
 
-  const inputs = this.querySelectorAll("input, textarea, select");
+const inputs = this.querySelectorAll("input, textarea, select");
 
-  const noticeData = {
-    title: inputs[0].value,
-    description: inputs[1].value,
-    category: inputs[2].value
-  };
+const noticeData = {
+title: inputs[0].value,
+description: inputs[1].value,
+category: inputs[2].value
+};
 
-  const response = await fetch(`${API_URL}/notices/create/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(noticeData)
-  });
-
-  const result = await response.json();
-
-  if (response.ok) {
-    closeCreateNoticeModal();
-    showSuccess("Notice created successfully");
-    loadNotices();
-    this.reset();
-  } else {
-    showError(result.message || "Failed to create notice");
-  }
-
+const response = await fetch(`${API_URL}/notices/create/`, {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify(noticeData)
 });
 
-// ---------- DELETE NOTICE ----------
+const result = await response.json();
+
+if (response.ok) {
+closeCreateNoticeModal();
+showSuccess("Notice created successfully");
+loadNotices();
+this.reset();
+} else {
+showError(result.message || "Failed to create notice");
+}
+});
+
 async function deleteNotice(id) {
+if (!confirm("Delete this notice?")) return;
 
-  if (!confirm("Delete this notice?")) return;
+await fetch(`${API_URL}/notices/delete/${id}/`, {
+method: "DELETE"
+});
 
-  await fetch(`${API_URL}/notices/delete/${id}/`, {
-    method: "DELETE"
-  });
-
-  loadNotices();
+loadNotices();
 }
 
-// Initial load
 loadNotices();
 
 </script>

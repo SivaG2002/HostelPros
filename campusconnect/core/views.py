@@ -1,7 +1,11 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import F, Sum
+from django.db.models import F, Count, Sum
 from .models import User, Room, Complaint, Fee, Student
+from django.db.models import Count
+
+
+from django.contrib.auth.hashers import make_password
 
 
 # ---------------- LOGIN ----------------
@@ -29,13 +33,13 @@ def admin_dashboard(request):
 
     total_rooms = Room.objects.count()
 
-    occupied_rooms = Room.objects.filter(
-        occupied__gt=0
-    ).count()
+    rooms_with_students = Room.objects.annotate(
+        student_count=Count('student')
+    )
 
-    available_rooms = Room.objects.filter(
-        occupied__lt=F('capacity')
-    ).count()
+    available_rooms = rooms_with_students.filter(student_count__gt=0).count()
+
+    occupied_rooms = total_rooms - available_rooms
 
     pending_complaints = Complaint.objects.filter(
         status='pending'
@@ -58,6 +62,27 @@ def admin_dashboard(request):
         "resolved_complaints": resolved_complaints,
         "pending_fees": pending_fees
     })
+
+
+@api_view(['GET'])
+def available_rooms(request):
+    rooms = Room.objects.all()
+
+    data = []
+
+    for room in rooms:
+        # print(room)
+        occupied = Student.objects.filter(room=room).count()
+
+        if occupied < room.capacity:
+            data.append({
+                "id": room.id,
+                "room_no": room.roomNo,
+                "capacity": room.capacity,
+                "occupied": occupied
+            })
+
+    return Response(data)
 
 @api_view(['GET'])
 def list_students(request):
@@ -94,53 +119,61 @@ def delete_student(request, student_id):
 @api_view(['PUT'])
 def toggle_student_status(request, student_id):
     try:
-        student = Student.objects.get(id=student_id)
-        student.is_active = not student.is_active
-        student.save()
-        return Response({"message": "Status updated"})
+        student = Student.objects.select_related("user").get(id=student_id)
+
+        # Toggle User's active status
+        student.user.is_active = not student.user.is_active
+        student.user.save()
+
+        return Response({
+            "message": "Student status updated successfully",
+            "is_active": student.user.is_active
+        })
+
     except Student.DoesNotExist:
         return Response({"message": "Student not found"}, status=404)
-
 @api_view(['POST'])
 def create_student(request):
+
     try:
         name = request.data.get("name")
         email = request.data.get("email")
+        password = request.data.get("password")
         roll_no = request.data.get("roll_no")
         phone = request.data.get("phone")
         room_no = request.data.get("room_no")
 
-        if not name or not email or not roll_no or not phone:
-            return Response({"message": "All required fields must be filled"}, status=400)
+        if not all([name, email, password, roll_no]):
+            return Response({"message": "Missing required fields"}, status=400)
 
-        # Prevent duplicate email
-        if User.objects.filter(email=email).exists():
-            return Response({"message": "Email already exists"}, status=400)
+        from django.contrib.auth.hashers import make_password
 
+        # Create user
         user = User.objects.create(
             name=name,
             email=email,
-            password="1234",
-            role="student"
+            password=make_password(password),
+            role="student",
+            phone=phone,
+            is_active=True
         )
 
-        room = Room.objects.filter(roomNo=room_no).first() if room_no else None
+        # Assign room
+        room = None
+        if room_no:
+            room = Room.objects.filter(roomNo=room_no).first()
 
+        # Create student profile
         Student.objects.create(
             user=user,
-            rollNo=roll_no,
-            phone=phone,
-            dept="N/A",
-            year=1,
-            room=room,
-            is_active=True
+            roll_no=roll_no,
+            room=room
         )
 
         return Response({"message": "Student created successfully"})
 
     except Exception as e:
         return Response({"message": str(e)}, status=400)
-    
 
 
 
@@ -357,6 +390,7 @@ def list_fees(request):
             "roll_no": "N/A",  # you don't store roll number in User
             "amount": float(f.amount),
             "status": f.status,
+            "semester": f.semester,
             "due_date": f.due_date.isoformat() if f.due_date else None
         })
 
@@ -399,33 +433,34 @@ def update_fee(request, fee_id):
 
     except Fee.DoesNotExist:
         return Response({"message": "Fee not found"}, status=404)    
-    
+
+
 @api_view(['POST'])
 def create_fee(request):
 
+    student_id = request.data.get("student_id")
+    amount = request.data.get("amount")
+    semester = request.data.get("semester")
+    due_date = request.data.get("due_date")
+
+    if not student_id or not amount or not semester or not due_date:
+        return Response({"message": "All fields required"}, status=400)
+
     try:
-        student_id = request.data.get("student_id")
-        amount = request.data.get("amount")
-        due_date = request.data.get("due_date")
+        student = Student.objects.get(id=student_id)
+    except Student.DoesNotExist:
+        return Response({"message": "Student not found"}, status=400)
 
-        if not student_id or not amount or not due_date:
-            return Response({"message": "All fields required"}, status=400)
+    Fee.objects.create(
+        student=student,   # ✅ correct
+        amount=amount,
+        semester=semester,
+        status="pending",
+        due_date=due_date
+    )
 
-        student = User.objects.get(id=student_id, role="student")
+    return Response({"message": "Fee created successfully"})
 
-        fee = Fee.objects.create(
-            student=student,
-            amount=amount,
-            status="pending",
-            due_date=due_date
-            
-        )
-
-        return Response({"message": "Fee created successfully"})
-
-    except User.DoesNotExist:
-        return Response({"message": "Student not found"}, status=404)   
-    
 @api_view(['GET'])
 def student_dashboard(request, user_id):
 
@@ -528,14 +563,13 @@ def student_fees(request, user_id):
     return Response(data)
 
 @api_view(['DELETE'])
-def delete_student(request, id):
+def delete_student(request, student_id):
 
     try:
-        student = Student.objects.get(id=id)
-        user = student.user
+        student = Student.objects.get(id=student_id)
 
-        student.delete()   # deletes student + fees (cascade)
-        user.delete()      # deletes user
+        # This deletes both because of CASCADE
+        student.user.delete()
 
         return Response({"message": "Student deleted successfully"})
 

@@ -27,5 +27,6 @@ urlpatterns = [
     path('fees/student/<int:user_id>/', views.student_fees),
     path('complaints/student/<int:user_id>/', views.student_complaints),
     path('complaints/create/', views.create_complaint),
+    path('rooms/available/', views.available_rooms),
     
 ]

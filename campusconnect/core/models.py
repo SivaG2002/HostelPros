@@ -12,6 +12,7 @@ class User(models.Model):
     password = models.CharField(max_length=255)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     phone = models.CharField(max_length=15, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
 
 class Room(models.Model):

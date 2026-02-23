@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CampusConnect - Hostel Management System</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+
+<!-- Remix Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#1e40af',
+secondary: '#60a5fa'
+}
+}
+}
+}
+</script>
+
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #0b0c10, #1f2833);
+min-height: 100vh;
+}
+
+.glass-effect {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.brand-font {
+font-family: "Bitcount Grid Double", system-ui;
+font-weight: 300;
+letter-spacing: 2px;
+}
+</style>
+</head>
+
+<body class="flex items-center justify-center p-4">
+
+<div class="w-full max-w-md">
+
+<!-- Logo + Heading -->
+<div class="mb-8 flex items-center justify-center gap-4">
+    <img src="assets\logo\lo.jpg" 
+         alt="CampusConnect Logo" 
+         class="w-14 h-14 object-contain">
+    
+    <h1 class="text-3xl text-white brand-font">
+        CampusConnect
+    </h1>
+</div>
+
+<div class="glass-effect rounded-2xl p-8">
+
+<h2 class="text-xl font-semibold text-white mb-6 text-center">
+Hostel Management System
+</h2>
+
+<div id="error-container" class="mb-4 text-red-400 text-sm text-center"></div>
+
+<form id="loginForm" class="space-y-6">
+
+<!-- Email -->
+<div>
+<label class="block text-sm font-medium text-white mb-2">Email</label>
+
+<div class="relative transition-all duration-300 transform hover:scale-105 focus-within:scale-105">
+<div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+<i class="ri-mail-line text-white/50"></i>
+</div>
+
+<input 
+type="email" 
+id="email"
+name="email"
+required
+class="w-full pl-10 pr-4 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/40"
+placeholder="Enter your email">
+</div>
+</div>
+
+<!-- Password -->
+<div>
+<label class="block text-sm font-medium text-white mb-2">Password</label>
+
+<div class="relative transition-all duration-300 transform hover:scale-105 focus-within:scale-105">
+<div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+<i class="ri-lock-line text-white/50"></i>
+</div>
+
+<input 
+type="password" 
+id="password"
+name="password"
+required
+class="w-full pl-10 pr-10 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/40"
+placeholder="Enter your password">
+</div>
+</div>
+
+<!-- Button -->
+<button type="submit"
+class="w-full bg-white text-primary font-semibold py-2.5 rounded-lg hover:bg-white/90 transition-all duration-300 transform hover:scale-110 active:scale-95">
+Login
+</button>
+
+</form>
+
+
+
+<!-- Keep Original Logic -->
+<script src="js/app.js"></script>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+e.preventDefault();
+
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+try {
+const data = await login(email, password);
+
+if (data.role === "admin") {
+window.location.href = "pages/admin-dashboard.html";
+} else {
+window.location.href = "pages/student-dashboard.html";
+}
+
+} catch (error) {
+showError(error.message);
+}
+});
+</script>
+
+</body>
+</html>
