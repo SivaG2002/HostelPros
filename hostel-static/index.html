@@ -1,265 +1,715 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Government Womens Polytechnic College Hostel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Womens Polytechnic College Hostel</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth
+        }
 
-*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
-body{font-family:'Manrope',sans-serif;background:#f4f6f9;color:#222;overflow-x:hidden}
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: #f4f6f9;
+            color: #222;
+            overflow-x: hidden
+        }
 
-/* NAVBAR */
-nav{
-position:fixed;top:0;width:100%;background:#111;
-display:flex;justify-content:space-between;align-items:center;
-padding:15px 60px;z-index:1000;
-}
-.logo-area{display:flex;align-items:center;gap:15px;color:white}
-.logo-area img{height:45px}
-.logo-area h3{font-size:14px;line-height:1.3}
-nav ul{display:flex;gap:22px;list-style:none;flex-wrap:wrap}
-nav a{color:white;text-decoration:none;font-size:13px}
-.login-btn{border:1px solid #fff;padding:6px 16px;border-radius:30px}
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 60px;
+            z-index: 1000;
+        }
 
-/* SECTIONS */
-section{padding:100px 8%}
-.section-title{text-align:center;margin-bottom:40px}
-.section-title h2{font-size:28px;margin-bottom:10px}
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white
+        }
 
-/* HERO */
-#home{
-height:100vh;display:flex;flex-direction:column;
-justify-content:center;align-items:center;text-align:center;
-background:linear-gradient(135deg,#000,#2b2b2b);
-color:white;position:relative;overflow:hidden;
-}
-#home h1{font-size:38px;margin-bottom:8px}
-#home h4{color:#ccc;margin-bottom:25px}
+        .logo-area img {
+            height: 45px
+        }
 
-/* SNOW */
-.snow-container{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
-.snowflake{position:absolute;top:-10px;color:white;font-size:8px;animation:fall linear infinite}
-@keyframes fall{to{transform:translateY(100vh)}}
+        .logo-area h3 {
+            font-size: 14px;
+            line-height: 1.3
+        }
 
-/* HERO CAROUSEL (UNCHANGED) */
-.carousel{position:relative;width:85%;max-width:950px;overflow:hidden;border-radius:15px;box-shadow:0 20px 40px rgba(0,0,0,0.4);z-index:2}
-.carousel-track{display:flex;transition:0.5s ease-in-out}
-.carousel-slide{min-width:100%;height:420px;background-size:cover;background-position:center}
-.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.6);color:white;border:none;padding:10px 14px;cursor:pointer}
-.prev{left:10px}.next{right:10px}
+        nav ul {
+            display: flex;
+            gap: 22px;
+            list-style: none;
+            flex-wrap: wrap
+        }
 
-/* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}
-.card{background:white;padding:25px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.08);transition:0.3s}
-.card:hover{transform:translateY(-5px)}
-.card h3{margin-bottom:10px}
-.card p{font-size:14px;color:#555;line-height:1.6}
-.card i{font-size:28px;margin-bottom:12px}
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 13px
+        }
 
-/* REVIEW SLIDER */
-.review-container{overflow:hidden;position:relative}
-.review-track{display:flex;transition:0.6s}
-.review-card{min-width:300px;background:white;margin-right:20px;padding:20px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+        .login-btn {
+            border: 1px solid #fff;
+            padding: 6px 16px;
+            border-radius: 30px
+        }
 
-/* FORMS */
-.contact-form input,.contact-form textarea{
-width:100%;padding:12px;margin-bottom:15px;border:none;border-radius:6px;background:#eee
-}
-.contact-form button{
-padding:10px 18px;background:#111;color:white;border:none;border-radius:6px;cursor:pointer
-}
+        /* SECTIONS */
+        section {
+            padding: 100px 8%
+        }
 
-/* MAP */
-iframe{border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px
+        }
 
-/* FOOTER */
-footer{background:#111;color:#ccc;text-align:center;padding:40px}
+        .section-title h2 {
+            font-size: 28px;
+            margin-bottom: 10px
+        }
 
-@media(max-width:900px){
-nav{flex-direction:column;gap:10px}
-}
+        /* HERO */
+        #home {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #000, #2b2b2b);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
 
-</style>
+        #home h1 {
+            font-size: 38px;
+            margin-bottom: 8px
+        }
+
+        #home h4 {
+            color: #ccc;
+            margin-bottom: 25px
+        }
+
+        /* SNOW */
+        .snow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 8px;
+            animation: fall linear infinite
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh)
+            }
+        }
+
+        /* HERO CAROUSEL (UNCHANGED) */
+        .carousel {
+            position: relative;
+            width: 85%;
+            max-width: 950px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            z-index: 2
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: 0.5s ease-in-out
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 420px;
+            background-size: cover;
+            background-position: center
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            cursor: pointer
+        }
+
+        .prev {
+            left: 10px
+        }
+
+        .next {
+            right: 10px
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: 0.3s
+        }
+
+        .card:hover {
+            transform: translateY(-5px)
+        }
+
+        .card h3 {
+            margin-bottom: 10px
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6
+        }
+
+        .card i {
+            font-size: 28px;
+            margin-bottom: 12px
+        }
+
+        /* REVIEW SLIDER */
+        .review-container {
+            overflow: hidden;
+            position: relative
+        }
+
+        .review-track {
+            display: flex;
+            transition: 0.6s
+        }
+
+        .review-card {
+            min-width: 300px;
+            background: white;
+            margin-right: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
+        }
+
+        /* FORMS */
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 6px;
+            background: #eee
+        }
+
+        .contact-form button {
+            padding: 10px 18px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer
+        }
+
+        /* MAP */
+        iframe {
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
+        }
+
+        /* FOOTER */
+        footer {
+            background: #111;
+            color: #ccc;
+            text-align: center;
+            padding: 40px
+        }
+
+        @media(max-width:900px) {
+            nav {
+                flex-direction: column;
+                gap: 10px
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav>
-<div class="logo-area">
-<img src="assets/img/clogo.png">
-<h3>GWPC Hostel<br>Kayamkulam</h3>
-</div>
-<ul>
-<li><a href="#home">Home</a></li>
-<li><a href="#facilities">Facilities</a></li>
-<li><a href="#rooms">Rooms</a></li>
-<li><a href="#rules">Rules</a></li>
-<li><a href="#mess">Mess</a></li>
-<li><a href="#reviews">Reviews</a></li>
-<li><a href="#warden">Administration</a></li>
-<li><a href="#complaint">Complaint</a></li>
-<li><a href="#contact">Contact</a></li>
-<li><a href="login.html" class="login-btn">Student Login</a></li>
-</ul>
-</nav>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo-area">
+            <img src="assets/img/clogo.png">
+            <h3>GWPC Hostel<br>Kayamkulam</h3>
+        </div>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#facilities">Facilities</a></li>
+            <li><a href="#rooms">Rooms</a></li>
+            <li><a href="#rules">Rules</a></li>
+            <li><a href="#mess">Mess</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#warden">Administration</a></li>
+            <li><a href="#complaint">Complaint</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="login.html" class="login-btn">Student Login</a></li>
+        </ul>
+    </nav>
 
-<!-- HERO -->
-<section id="home">
-<div class="snow-container"></div>
-<h1>College Women's Hostel</h1>
-<h4>Safe • Comfortable • Empowering</h4>
+    <!-- HERO -->
+    <section id="home">
+        <div class="snow-container"></div>
+        <h1>College Women's Hostel</h1>
+        <h4>Safe • Comfortable • Empowering</h4>
 
-<div class="carousel">
-<div class="carousel-track">
-<div class="carousel-slide" style="background-image:url('assets/img/sur1.jpg')"></div>
-<div class="carousel-slide" style="background-image:url('assets/img/sur2.jpg')"></div>
-<div class="carousel-slide" style="background-image:url('assets/img/sur3.jpg')"></div>
-<div class="carousel-slide" style="background-image:url('assets/img/br.jpg')"></div>
-<div class="carousel-slide" style="background-image:url('assets/img/wr.jpg')"></div>
-<div class="carousel-slide" style="background-image:url('assets/img/mess.png')"></div>
-</div>
-<button class="carousel-btn prev">&#10094;</button>
-<button class="carousel-btn next">&#10095;</button>
-</div>
-</section>
+        <div class="carousel">
+            <div class="carousel-track">
+                <div class="carousel-slide" style="background-image:url('assets/img/sur1.jpg')"></div>
+                <div class="carousel-slide" style="background-image:url('assets/img/sur2.jpg')"></div>
+                <div class="carousel-slide" style="background-image:url('assets/img/sur3.jpg')"></div>
+                <div class="carousel-slide" style="background-image:url('assets/img/br.jpg')"></div>
+                <div class="carousel-slide" style="background-image:url('assets/img/wr.jpg')"></div>
+                <div class="carousel-slide" style="background-image:url('assets/img/mess.png')"></div>
+            </div>
+            <button class="carousel-btn prev">&#10094;</button>
+            <button class="carousel-btn next">&#10095;</button>
+        </div>
+    </section>
 
-<!-- FACILITIES -->
-<section id="facilities">
-<div class="section-title"><h2>Hostel Facilities</h2></div>
-<div class="grid">
-<div class="card"><i class="fa fa-wifi"></i><h3>WiFi</h3><p>High-speed internet 24/7.</p></div>
-<div class="card"><i class="fa fa-shield"></i><h3>Security</h3><p>CCTV & 24hr security staff.</p></div>
-<div class="card"><i class="fa fa-cutlery"></i><h3>Mess</h3><p>Nutritious veg & non-veg meals.</p></div>
-<div class="card"><i class="fa fa-bed"></i><h3>Furnished Rooms</h3><p>Cot, study table, cupboard.</p></div>
-<div class="card"><i class="fa fa-bolt"></i><h3>Power Backup</h3><p>Uninterrupted electricity.</p></div>
-<div class="card"><i class="fa fa-tint"></i><h3>Water</h3><p>Purified drinking water.</p></div>
-</div>
-</section>
+    <!-- FACILITIES -->
+    <section id="facilities">
+        <div class="section-title">
+            <h2>Hostel Facilities</h2>
+        </div>
+        <div class="grid">
+            <div class="card"><i class="fa fa-wifi"></i>
+                <h3>WiFi</h3>
+                <p>High-speed internet 24/7.</p>
+            </div>
+            <div class="card"><i class="fa fa-shield"></i>
+                <h3>Security</h3>
+                <p>CCTV & 24hr security staff.</p>
+            </div>
+            <div class="card"><i class="fa fa-cutlery"></i>
+                <h3>Mess</h3>
+                <p>Nutritious veg & non-veg meals.</p>
+            </div>
+            <div class="card"><i class="fa fa-bed"></i>
+                <h3>Furnished Rooms</h3>
+                <p>Cot, study table, cupboard.</p>
+            </div>
+            <div class="card"><i class="fa fa-bolt"></i>
+                <h3>Power Backup</h3>
+                <p>Uninterrupted electricity.</p>
+            </div>
+            <div class="card"><i class="fa fa-tint"></i>
+                <h3>Water</h3>
+                <p>Purified drinking water.</p>
+            </div>
+        </div>
+    </section>
 
-<!-- ROOM TYPES -->
-<section id="rooms">
-<div class="section-title"><h2>Room Types & Fees</h2></div>
-<div class="grid">
-<div class="card"><h3>Single Room</h3><p>Private stay.</p><p><strong>₹35,000 / Year</strong></p></div>
-<div class="card"><h3>Double Sharing</h3><p>2 Students.</p><p><strong>₹25,000 / Year</strong></p></div>
-<div class="card"><h3>Triple Sharing</h3><p>3 Students.</p><p><strong>₹18,000 / Year</strong></p></div>
-</div>
-</section>
+    <!-- ROOM TYPES -->
+    <section id="rooms">
+        <div class="section-title">
+            <h2>Room Types & Fees</h2>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <h3>Single Room</h3>
+                <p>Private stay.</p>
+                <p><strong>₹35,000 / Year</strong></p>
+            </div>
+            <div class="card">
+                <h3>Double Sharing</h3>
+                <p>2 Students.</p>
+                <p><strong>₹25,000 / Year</strong></p>
+            </div>
+            <div class="card">
+                <h3>Triple Sharing</h3>
+                <p>3 Students.</p>
+                <p><strong>₹18,000 / Year</strong></p>
+            </div>
+        </div>
+    </section>
 
-<!-- RULES -->
-<section id="rules">
-<div class="section-title"><h2>Hostel Rules</h2></div>
-<ul style="max-width:900px;margin:auto;line-height:2">
-<li>Curfew: 10PM weekdays, 11PM weekends.</li>
-<li>Guests: 10AM–6PM.</li>
-<li>No alcohol, smoking, drugs.</li>
-<li>Quiet hours: 10PM–7AM.</li>
-<li>Weekly room inspection.</li>
-<li>Fees due by 10th every month.</li>
-</ul>
-</section>
+    <!-- RULES -->
+    <section id="rules">
+        <div class="section-title">
+            <h2>Hostel Rules</h2>
+        </div>
+        <ul style="max-width:900px;margin:auto;line-height:2">
+            <li>Curfew: 10PM weekdays, 11PM weekends.</li>
+            <li>Guests: 10AM–6PM.</li>
+            <li>No alcohol, smoking, drugs.</li>
+            <li>Quiet hours: 10PM–7AM.</li>
+            <li>Weekly room inspection.</li>
+            <li>Fees due by 10th every month.</li>
+        </ul>
+    </section>
 
-<!-- MESS MENU -->
-<section id="mess">
-<div class="section-title"><h2>Weekly Mess Menu</h2></div>
-<div class="grid">
-<div class="card"><h3>Breakfast</h3><p>Idli, Dosa, Puttu, Upma, Appam, Poori.</p></div>
-<div class="card"><h3>Lunch</h3><p>Rice, Sambar, Rasam, Veg curry, Chicken (Sun).</p></div>
-<div class="card"><h3>Dinner</h3><p>Chapathi, Fried Rice, Lemon Rice, Egg Curry.</p></div>
-</div>
-</section>
+    <!-- MESS MENU -->
+    <section id="mess">
+        <div class="section-title">
+            <h2>Weekly Mess Menu</h2>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <h3>Breakfast</h3>
+                <p>Idli, Dosa, Puttu, Upma, Appam, Poori.</p>
+            </div>
+            <div class="card">
+                <h3>Lunch</h3>
+                <p>Rice, Sambar, Rasam, Veg curry, Chicken (Sun).</p>
+            </div>
+            <div class="card">
+                <h3>Dinner</h3>
+                <p>Chapathi, Fried Rice, Lemon Rice, Egg Curry.</p>
+            </div>
+        </div>
+    </section>
 
-<!-- REVIEWS SLIDER -->
-<section id="reviews">
-<div class="section-title"><h2>Student Reviews</h2></div>
-<div class="review-container">
-<div class="review-track" id="reviewTrack">
-<div class="review-card">Safe environment and supportive wardens.</div>
-<div class="review-card">Clean rooms and good food quality.</div>
-<div class="review-card">Best hostel experience.</div>
-</div>
-</div>
-</section>
+    <!-- REVIEWS SLIDER -->
+    <section id="reviews">
+        <div class="section-title">
+            <h2>Student Reviews</h2>
+            <p style="text-align:center;margin-bottom:30px;">
+                Experiences shared by students residing in the hostel.
+            </p>
+        </div>
 
-<!-- WARDEN -->
-<section id="warden">
-<div class="section-title"><h2>Administration</h2></div>
-<div class="grid">
-<div class="card"><h3>Chief Warden</h3><p>Mrs. Lakshmi Nair</p></div>
-<div class="card"><h3>Assistant Warden</h3><p>Mrs. Asha Devi</p></div>
-</div>
-</section>
+        <div class="review-container">
+            <div class="review-track" id="reviewTrack">
 
-<!-- COMPLAINT -->
-<section id="complaint">
-<div class="section-title"><h2>Complaint Form</h2></div>
-<div style="max-width:600px;margin:auto">
-<form class="contact-form">
-<input type="text" placeholder="Student Name">
-<input type="text" placeholder="Room Number">
-<textarea rows="4" placeholder="Complaint"></textarea>
-<button>Submit</button>
-</form>
-</div>
-</section>
+                <div class="review-card">
+                    <p><strong>Anjali S.</strong></p>
+                    <p>The hostel maintains excellent discipline and safety standards. The wardens are supportive and
+                        approachable.</p>
+                </div>
 
-<!-- CONTACT -->
-<section id="contact">
-<div class="section-title"><h2>Contact & Location</h2></div>
-<div class="grid">
-<div class="card"><h3>Address</h3><p>GWPC Hostel, Kayamkulam, Kerala - 690502</p></div>
-<div class="card"><h3>Phone</h3><p>+91 9496XXXXXX</p></div>
-<div class="card"><h3>Email</h3><p>hostel@gwpc.edu.in</p></div>
-</div>
-<br><br>
-<iframe src="https://maps.google.com/maps?q=Government%20Womens%20Polytechnic%20College%20Kayamkulam&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="350"></iframe>
-</section>
+                <div class="review-card">
+                    <p><strong>Reshma P.</strong></p>
+                    <p>Rooms are clean and well ventilated. Study atmosphere is peaceful and suitable for exam
+                        preparation.</p>
+                </div>
 
-<footer>
-<p>© 2026 Government Women's Polytechnic College Hostel | Kayamkulam</p>
-</footer>
+                <div class="review-card">
+                    <p><strong>Fathima K.</strong></p>
+                    <p>Mess food quality is consistently good. Weekly menu is balanced and hygienic.</p>
+                </div>
 
-<script>
+                <div class="review-card">
+                    <p><strong>Meera L.</strong></p>
+                    <p>Security arrangements including CCTV surveillance make students feel safe at all times.</p>
+                </div>
 
-/* HERO CAROUSEL */
-const track=document.querySelector('.carousel-track');
-const slides=Array.from(track.children);
-const nextBtn=document.querySelector('.next');
-const prevBtn=document.querySelector('.prev');
-let index=0;
-function update(){track.style.transform='translateX(-'+index*100+'%)'}
-nextBtn.onclick=()=>{index=(index+1)%slides.length;update()}
-prevBtn.onclick=()=>{index=(index-1+slides.length)%slides.length;update()}
-setInterval(()=>{index=(index+1)%slides.length;update()},4000)
+                <div class="review-card">
+                    <p><strong>Devika R.</strong></p>
+                    <p>The hostel infrastructure is well maintained. Maintenance requests are addressed promptly.</p>
+                </div>
 
-/* REVIEW AUTO SLIDE */
-const reviewTrack=document.getElementById("reviewTrack");
-let rIndex=0;
-setInterval(()=>{
-rIndex=(rIndex+1)%3;
-reviewTrack.style.transform="translateX(-"+(rIndex*320)+"px)";
-},3000)
+                <div class="review-card">
+                    <p><strong>Keerthana M.</strong></p>
+                    <p>Power backup and water facilities are reliable. No major interruptions during the academic year.
+                    </p>
+                </div>
 
-/* SNOW */
-const snowContainer=document.querySelector('.snow-container');
-for(let i=0;i<70;i++){
-let snow=document.createElement('div');
-snow.classList.add('snowflake');
-snow.innerHTML="•";
-snow.style.left=Math.random()*100+"vw";
-snow.style.animationDuration=(3+Math.random()*5)+"s";
-snow.style.opacity=Math.random();
-snow.style.fontSize=(5+Math.random()*6)+"px";
-snowContainer.appendChild(snow);
-}
+                <div class="review-card">
+                    <p><strong>Gayathri N.</strong></p>
+                    <p>Friendly atmosphere among students. The environment encourages academic focus.</p>
+                </div>
 
-</script>
+                <div class="review-card">
+                    <p><strong>Anjali S.</strong></p>
+                    <p>The hostel provides a disciplined and secure environment suitable for focused academic
+                        preparation.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Reshma P.</strong></p>
+                    <p>Clean rooms and well-maintained facilities make the stay comfortable throughout the year.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Fathima K.</strong></p>
+                    <p>The mess food is hygienic and balanced. Weekly menu planning is properly managed.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Meera L.</strong></p>
+                    <p>Security arrangements including CCTV give students a strong sense of safety.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Devika R.</strong></p>
+                    <p>Wardens are approachable and address concerns without delay.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Keerthana M.</strong></p>
+                    <p>Peaceful atmosphere especially during exam season. Quiet hours are strictly maintained.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Gayathri N.</strong></p>
+                    <p>Power backup ensures uninterrupted study and comfort.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Aparna V.</strong></p>
+                    <p>Water facilities and cleanliness standards are consistently maintained.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Nithya R.</strong></p>
+                    <p>Room allocation and administration procedures are transparent and fair.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Athira B.</strong></p>
+                    <p>Friendly student community and positive hostel culture.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Shreya D.</strong></p>
+                    <p>Maintenance issues are resolved quickly by the staff.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Varsha K.</strong></p>
+                    <p>Study environment is calm and suitable for academic growth.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Sneha P.</strong></p>
+                    <p>Mess staff maintain proper hygiene and cleanliness standards.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Riya S.</strong></p>
+                    <p>Infrastructure is well planned and properly supervised.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Lakshmi T.</strong></p>
+                    <p>Hostel management ensures discipline without being overly strict.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Anu M.</strong></p>
+                    <p>Comfortable bedding and adequate storage space in rooms.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Parvathy G.</strong></p>
+                    <p>Excellent security and visitor regulation policies.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Nandana P.</strong></p>
+                    <p>Electricity and water supply are reliable throughout the year.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Haritha S.</strong></p>
+                    <p>Supportive environment encourages academic discipline.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Sreelakshmi R.</strong></p>
+                    <p>Clean corridors and properly maintained common areas.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Diya K.</strong></p>
+                    <p>Hostel provides a safe atmosphere for students from outside districts.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Neha V.</strong></p>
+                    <p>Mess timing and food quality are well organized.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Aiswarya L.</strong></p>
+                    <p>Rooms are well ventilated with sufficient lighting.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Krishna P.</strong></p>
+                    <p>Strict curfew timings ensure safety and discipline.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Amritha B.</strong></p>
+                    <p>Overall hostel experience has been structured and positive.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Malavika S.</strong></p>
+                    <p>Hygiene standards in bathrooms and common spaces are maintained properly.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Roshni M.</strong></p>
+                    <p>Peaceful environment free from unnecessary disturbances.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Navya R.</strong></p>
+                    <p>Administration ensures timely communication of notices and updates.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Bhavana K.</strong></p>
+                    <p>Support from wardens during academic stress is commendable.</p>
+                </div>
+
+                <div class="review-card">
+                    <p><strong>Deepa N.</strong></p>
+                    <p>Overall, the hostel provides a balanced and secure living experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- WARDEN -->
+    <section id="warden">
+        <div class="section-title">
+            <h2>Administration</h2>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <h3>Chief Warden</h3>
+                <p>Mrs. Lakshmi Nair</p>
+            </div>
+            <div class="card">
+                <h3>Assistant Warden</h3>
+                <p>Mrs. Asha Devi</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPLAINT -->
+    <section id="complaint">
+        <div class="section-title">
+            <h2>Complaint Form</h2>
+        </div>
+        <div style="max-width:600px;margin:auto">
+            <form class="contact-form">
+                <input type="text" placeholder="Student Name">
+                <input type="text" placeholder="Room Number">
+                <textarea rows="4" placeholder="Complaint"></textarea>
+                <button>Submit</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="section-title">
+            <h2>Contact & Location</h2>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <h3>Address</h3>
+                <p>GWPC Hostel, Kayamkulam, Kerala - 690502</p>
+            </div>
+            <div class="card">
+                <h3>Phone</h3>
+                <p>+91 9496XXXXXX</p>
+            </div>
+            <div class="card">
+                <h3>Email</h3>
+                <p>hostel@gwpc.edu.in</p>
+            </div>
+        </div>
+        <br><br>
+        <iframe
+            src="https://maps.google.com/maps?q=Government%20Womens%20Polytechnic%20College%20Kayamkulam&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            width="100%" height="350"></iframe>
+    </section>
+
+    <footer>
+        <p>© 2026 Government Women's Polytechnic College Hostel | Kayamkulam</p>
+    </footer>
+
+    <script>
+
+        /* HERO CAROUSEL */
+        const track = document.querySelector('.carousel-track');
+        const slides = Array.from(track.children);
+        const nextBtn = document.querySelector('.next');
+        const prevBtn = document.querySelector('.prev');
+        let index = 0;
+        function update() { track.style.transform = 'translateX(-' + index * 100 + '%)' }
+        nextBtn.onclick = () => { index = (index + 1) % slides.length; update() }
+        prevBtn.onclick = () => { index = (index - 1 + slides.length) % slides.length; update() }
+        setInterval(() => { index = (index + 1) % slides.length; update() }, 4000)
+
+        /* REVIEW AUTO SLIDE */
+        const reviewTrack = document.getElementById("reviewTrack");
+        let rIndex = 0;
+        setInterval(() => {
+            rIndex = (rIndex + 1) % 3;
+            reviewTrack.style.transform = "translateX(-" + (rIndex * 320) + "px)";
+        }, 3000)
+
+        /* SNOW */
+        const snowContainer = document.querySelector('.snow-container');
+        for (let i = 0; i < 70; i++) {
+            let snow = document.createElement('div');
+            snow.classList.add('snowflake');
+            snow.innerHTML = "•";
+            snow.style.left = Math.random() * 100 + "vw";
+            snow.style.animationDuration = (3 + Math.random() * 5) + "s";
+            snow.style.opacity = Math.random();
+            snow.style.fontSize = (5 + Math.random() * 6) + "px";
+            snowContainer.appendChild(snow);
+        }
+
+    </script>
 
 </body>
+
 </html>

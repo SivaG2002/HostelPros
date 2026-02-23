@@ -1,11 +1,23 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 from django.db.models import F, Count, Sum
-from .models import User, Room, Complaint, Fee, Student
-from django.db.models import Count
-
-
+from django.http import HttpResponse
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
+
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.utils import ImageReader
+
+from .models import User, Room, Complaint, Fee, Student, Notice
+
+import razorpay
+import io
+import os
+from datetime import datetime
 
 
 # ---------------- LOGIN ----------------
@@ -146,8 +158,7 @@ def create_student(request):
         if not all([name, email, password, roll_no]):
             return Response({"message": "Missing required fields"}, status=400)
 
-        from django.contrib.auth.hashers import make_password
-
+        
         # Create user
         user = User.objects.create(
             name=name,
@@ -282,10 +293,6 @@ def list_rooms(request):
 
     return Response(data)
 
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import Notice
 
 
 # ================= LIST ALL NOTICES =================
@@ -609,3 +616,160 @@ def create_complaint(request):
     )
 
     return Response({"message": "Complaint created successfully"})
+
+
+
+
+@api_view(['POST'])
+def create_payment_order(request, fee_id):
+
+    try:
+        fee = Fee.objects.get(id=fee_id)
+
+        if fee.status == "paid":
+            return Response({"message": "Already paid"}, status=400)
+
+        client = razorpay.Client(
+            auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+        )
+
+        order = client.order.create({
+            "amount": int(fee.amount * 100),  # paise
+            "currency": "INR",
+            "payment_capture": 1
+        })
+
+        return Response({
+            "order_id": order["id"],
+            "amount": order["amount"],
+            "key": settings.RAZORPAY_KEY_ID
+        })
+
+    except Fee.DoesNotExist:
+        return Response({"message": "Fee not found"}, status=404)
+    
+
+
+@api_view(['POST'])
+def verify_payment(request):
+
+    payment_id = request.data.get("payment_id")
+    order_id = request.data.get("order_id")
+    fee_id = request.data.get("fee_id")
+
+    try:
+        fee = Fee.objects.get(id=fee_id)
+
+        client = razorpay.Client(
+            auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+        )
+
+        client.utility.verify_payment_signature({
+            'razorpay_order_id': order_id,
+            'razorpay_payment_id': payment_id,
+            'razorpay_signature': request.data.get("signature")
+        })
+
+        fee.status = "paid"
+        fee.save()
+
+        return Response({"message": "Payment successful"})
+
+    except Exception as e:
+        return Response({"message": "Verification failed"}, status=400)    
+    
+
+
+
+@api_view(['GET'])
+def download_receipt(request, fee_id):
+
+    from core.models import Fee
+
+    fee = Fee.objects.get(id=fee_id)
+
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=A4)
+
+    width, height = A4
+
+    # ================= HEADER SECTION =================
+    header_height = 130
+
+    # Background Header Bar
+    p.setFillColor(colors.HexColor("#0A1F44"))  # Deep Blue
+    p.rect(0, height - header_height, width, header_height, fill=1)
+
+    # Logo (Left Side)
+    logo_path = os.path.join(settings.BASE_DIR, "campusconnect", "logo", "lo.jpg")
+
+    if os.path.exists(logo_path):
+        logo = ImageReader(logo_path)
+        p.drawImage(logo, 40, height - 90, width=50, height=50, mask='auto')
+
+    # College Name & Address
+    p.setFillColor(colors.white)
+
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, height - 60,
+                 "Government Women's Polytechnic College Hostel | Kayamkulam")
+
+    p.setFont("Helvetica", 11)
+    p.drawString(100, height - 80,
+                 "GWPC Hostel, Kayamkulam, Kerala - 690502")
+
+    p.drawString(100, height - 95,
+                 "+91 949675848")
+
+    p.drawString(100, height - 110,
+                 "hostel@gwpc.edu.in")
+
+   
+
+    # Divider Line
+    p.setStrokeColor(colors.grey)
+    p.line(50, height - 160, width - 50, height - 160)
+
+    # ================= RECEIPT DETAILS =================
+    receipt_data = [
+        ["Receipt No", f"GWPC-REC-{fee.id}"],
+        ["Student Name", fee.student.user.name],
+        ["Semester", fee.semester],
+        ["Amount Paid", f"₹ {fee.amount}"],
+        ["Payment Status", fee.status],
+        ["Transaction ID", getattr(fee, 'transaction_id', 'N/A')],
+        ["Payment Date", datetime.now().strftime("%d-%m-%Y %H:%M")]
+    ]
+
+    table = Table(receipt_data, colWidths=[150, 330])
+
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.whitesmoke),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('LEFTPADDING', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+    ]))
+
+    table.wrapOn(p, width, height)
+    table.drawOn(p, 50, height - 350)
+
+    # ================= FOOTER =================
+    p.setFillColor(colors.HexColor("#0A1F44"))
+    p.rect(0, 0, width, 45, fill=1)
+
+    p.setFillColor(colors.white)
+    p.setFont("Helvetica", 9)
+    p.drawCentredString(width / 2, 18,
+                        "This is a system-generated receipt from GWPC Hostel Management System.")
+
+    p.showPage()
+    p.save()
+
+    buffer.seek(0)
+
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="GWPC_Receipt_{fee.id}.pdf"'
+
+    return response

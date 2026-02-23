@@ -28,5 +28,8 @@ urlpatterns = [
     path('complaints/student/<int:user_id>/', views.student_complaints),
     path('complaints/create/', views.create_complaint),
     path('rooms/available/', views.available_rooms),
+    path('fees/create-order/<int:fee_id>/', views.create_payment_order),
+    path('fees/verify-payment/', views.verify_payment),
+    path('fees/receipt/<int:fee_id>/', views.download_receipt),
     
 ]

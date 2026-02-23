@@ -4,64 +4,27 @@
 <meta charset="UTF-8">
 <title>My Fees - CampusConnect</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@400;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 
+<!-- Razorpay -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <style>
+.brand-font { font-family:"Bitcount Grid Double",system-ui;letter-spacing:2px; }
+body { font-family:'Inter',sans-serif; }
+#sidebar{width:250px;}
 
-    .brand-font {
-font-family: "Bitcount Grid Double", system-ui;
-font-size: medium;
-font-weight: 100;
-letter-spacing: 2px;
+.card{background:white;border:1px solid black;border-radius:12px;padding:1.25rem;}
+.button{
+background:black;color:white;padding:6px 14px;border-radius:8px;
+transition:0.2s;display:inline-block;text-align:center;
 }
-body {
-font-family: 'Inter', sans-serif;
-transition: background 0.3s ease, color 0.3s ease;
-}
+.button:hover{opacity:0.85;}
 
-/* Sidebar */
-#sidebar { width: 250px; }
-
-/* Cards */
-.card {
-background: white;
-border: 1px solid black;
-border-radius: 12px;
-padding: 1.25rem;
-}
-
-/* Buttons */
-.button {
-background: black;
-color: white;
-padding: 0.5rem 1rem;
-border-radius: 8px;
-transition: opacity 0.2s ease;
-display: inline-block;
-text-align: center;
-}
-
-.button:hover { opacity: 0.85; }
-
-/* Table Scroll */
-.table-wrapper {
-max-height: 400px;
-overflow-y: auto;
-overflow-x: auto;
-}
-
-/* Dark Mode */
-.dark-mode {
-background: #0f172a;
-color: white;
-}
-
-.dark-mode .card {
-background: #1e293b;
-border: 1px solid black;
-}
+.table-wrapper{max-height:400px;overflow:auto;}
 </style>
 </head>
 
@@ -70,21 +33,18 @@ border: 1px solid black;
 <script src="../js/app.js"></script>
 <script>
 checkAuthAndRedirect();
-if (getUserRole() !== "student") {
-window.location.href = "admin-dashboard.html";
+if(getUserRole()!=="student"){
+window.location.href="admin-dashboard.html";
 }
 </script>
 
 <!-- Sidebar -->
-<aside id="sidebar"
-class="fixed top-0 left-0 h-full bg-black text-white p-6 flex flex-col justify-between transform transition-transform duration-300">
-
+<aside id="sidebar" class="fixed top-0 left-0 h-full bg-black text-white p-6 flex flex-col justify-between">
 <div>
 <div class="flex items-center gap-3 mb-8">
 <img src="../assets/logo/lo.jpg" class="w-10 h-10 object-contain">
-<span class="text-lg text-white brand-font">CampusConnect</span>
+<span class="brand-font">CampusConnect</span>
 </div>
-
 <nav class="flex flex-col gap-4">
 <a href="student-dashboard.html">Dashboard</a>
 <a href="student-rules.html">Rules</a>
@@ -93,39 +53,18 @@ class="fixed top-0 left-0 h-full bg-black text-white p-6 flex flex-col justify-b
 <a href="student-complaints.html">Complaints</a>
 </nav>
 </div>
-
 <button class="button mt-6" onclick="logout()">Logout</button>
 </aside>
 
-<!-- Main Content -->
-<div id="mainContent" class="flex-1 ml-[250px] p-8 transition-all duration-300">
+<!-- Main -->
+<div id="mainContent" class="flex-1 ml-[250px] p-8">
 
-<!-- Top Bar -->
-<div class="flex items-center mb-8 relative">
-<button onclick="toggleSidebar()" class="button">☰</button>
+<h1 class="text-2xl font-semibold mb-6 text-center">My Fees</h1>
 
-<h1 class="absolute left-1/2 transform -translate-x-1/2 text-2xl font-semibold">
-My Fees
-</h1>
+<div id="loading">Loading fees...</div>
+<div id="summary-container" class="grid grid-cols-3 gap-6 mb-6 hidden"></div>
 
-<div class="ml-auto">
-<label class="flex items-center cursor-pointer">
-<input type="checkbox" id="themeToggle" class="hidden">
-<div class="w-12 h-6 bg-gray-300 rounded-full relative transition">
-<div id="toggleCircle"
-class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition"></div>
-</div>
-</label>
-</div>
-</div>
-
-<div id="error-container"></div>
-
-<div id="loading" class="mb-4">Loading fees...</div>
-
-<div class="grid grid-cols-3 gap-6 mb-6" id="summary-container" style="display:none;"></div>
-
-<div class="card" id="table-container" style="display:none;">
+<div class="card hidden" id="table-container">
 <div class="table-wrapper">
 <table class="w-full border-collapse">
 <thead>
@@ -134,6 +73,7 @@ class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition"></div
 <th class="p-2 text-left">Amount</th>
 <th class="p-2 text-left">Status</th>
 <th class="p-2 text-left">Due Date</th>
+<th class="p-2 text-left">Action</th>
 </tr>
 </thead>
 <tbody id="fees-tbody"></tbody>
@@ -145,90 +85,45 @@ class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition"></div
 
 <script>
 
-/* Sidebar Toggle */
-const sidebar = document.getElementById("sidebar");
-const mainContent = document.getElementById("mainContent");
-let isOpen = true;
-
-function toggleSidebar() {
-if (isOpen) {
-sidebar.style.transform = "translateX(-100%)";
-mainContent.style.marginLeft = "0";
-} else {
-sidebar.style.transform = "translateX(0)";
-mainContent.style.marginLeft = "250px";
-}
-isOpen = !isOpen;
-}
-
-/* Dark Mode */
-const toggle = document.getElementById("themeToggle");
-const circle = document.getElementById("toggleCircle");
-
-toggle.addEventListener("change", () => {
-document.body.classList.toggle("dark-mode");
-circle.style.transform = toggle.checked ? "translateX(24px)" : "translateX(0)";
-});
-
-/* ===== ORIGINAL LOGIC (UNCHANGED) ===== */
-
 setActiveNavLink("fees");
 
-async function loadStudentFees() {
+async function loadStudentFees(){
 
-const userId = getUserId();
-if (!userId) return;
+const userId=getUserId();
+if(!userId) return;
 
-try {
+const response=await fetch(`${API_URL}/fees/student/${userId}/`);
+const data=await response.json();
 
-const response = await fetch(`${API_URL}/fees/student/${userId}/`);
-const data = await response.json();
+document.getElementById("loading").style.display="none";
 
-document.getElementById("loading").style.display = "none";
-
-if (!data || data.length === 0) {
-document.getElementById("error-container").innerHTML =
-`<div class="card text-center">No fee records found.</div>`;
+if(!data||data.length===0){
+document.getElementById("loading").innerHTML="No fee records found.";
 return;
 }
 
 /* SUMMARY */
-const total = data.reduce((s, f) => s + f.amount, 0);
-const paid = data
-.filter(f => f.status === "paid")
-.reduce((s, f) => s + f.amount, 0);
-const pending = total - paid;
+const total=data.reduce((s,f)=>s+f.amount,0);
+const paid=data.filter(f=>f.status==="paid").reduce((s,f)=>s+f.amount,0);
+const pending=total-paid;
 
-document.getElementById("summary-container").innerHTML = `
-<div class="card">
-<h3>Total Fees</h3>
-<strong>${formatCurrency(total)}</strong>
-</div>
-
-<div class="card">
-<h3>Paid</h3>
-<strong style="color:green;">${formatCurrency(paid)}</strong>
-</div>
-
-<div class="card">
-<h3>Pending</h3>
-<strong style="color:red;">${formatCurrency(pending)}</strong>
-</div>
+document.getElementById("summary-container").innerHTML=`
+<div class="card"><strong>Total</strong><div>${formatCurrency(total)}</div></div>
+<div class="card"><strong style="color:green;">Paid</strong><div>${formatCurrency(paid)}</div></div>
+<div class="card"><strong style="color:red;">Pending</strong><div>${formatCurrency(pending)}</div></div>
 `;
-
-document.getElementById("summary-container").style.display = "grid";
+document.getElementById("summary-container").classList.remove("hidden");
 
 /* TABLE */
-let rows = '';
+let rows='';
 
-data.forEach(fee => {
+data.forEach(fee=>{
 
-const badgeColor =
-fee.status === "paid" ? "#27ae60" : "#e67e22";
+const badgeColor=fee.status==="paid"?"#27ae60":"#e67e22";
 
-rows += `
+rows+=`
 <tr class="border-b border-gray-200">
-<td class="p-2">${fee.semester || "N/A"}</td>
+<td class="p-2">${fee.semester||"N/A"}</td>
 <td class="p-2">${formatCurrency(fee.amount)}</td>
 <td class="p-2">
 <span style="background:${badgeColor};color:white;padding:4px 10px;border-radius:4px;">
@@ -236,22 +131,66 @@ ${fee.status.toUpperCase()}
 </span>
 </td>
 <td class="p-2">${formatDate(fee.due_date)}</td>
+<td class="p-2">
+${fee.status==="pending"
+? `<button class="button" onclick="payNow(${fee.id})">Pay Now</button>`
+: `<button class="button" onclick="downloadReceipt(${fee.id})">Receipt</button>`}
+</td>
 </tr>
 `;
 });
 
-document.getElementById("fees-tbody").innerHTML = rows;
-document.getElementById("table-container").style.display = "block";
-
-} catch (error) {
-console.error(error);
-showError("Failed to load fees.");
-}
+document.getElementById("fees-tbody").innerHTML=rows;
+document.getElementById("table-container").classList.remove("hidden");
 }
 
 loadStudentFees();
 
-</script>
+/* ===== PAYMENT ===== */
 
+async function payNow(feeId){
+
+const res=await fetch(`${API_URL}/fees/create-order/${feeId}/`,{
+method:"POST"
+});
+
+const data=await res.json();
+
+const options={
+key:data.key,
+amount:data.amount,
+currency:"INR",
+order_id:data.order_id,
+name:"CampusConnect",
+description:"Hostel Fee Payment",
+handler:async function(response){
+
+await fetch(`${API_URL}/fees/verify-payment/`,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+payment_id:response.razorpay_payment_id,
+order_id:response.razorpay_order_id,
+signature:response.razorpay_signature,
+fee_id:feeId
+})
+});
+
+alert("Payment Successful");
+loadStudentFees();
+}
+};
+
+const rzp=new Razorpay(options);
+rzp.open();
+}
+
+/* ===== RECEIPT ===== */
+
+function downloadReceipt(feeId){
+window.open(`${API_URL}/fees/receipt/${feeId}/`);
+}
+
+</script>
 </body>
 </html>

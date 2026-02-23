@@ -1,0 +1,6 @@
+Django
+djangorestframework
+razorpay
+reportlab
+django-cors-headers
+mysqlclient

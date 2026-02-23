@@ -1,19 +1,40 @@
 @echo off
 
-echo Running Scripts ....
+title Django Project Launcher
 
-timeout /t 3 >nul
+echo ==========================================
+echo        Django Project Auto Launcher
+echo ==========================================
+echo.
 
-echo Creating database ...
-
-timeout /t 3 >nul
-mysql -u root -p < database_setup.sql
-
-if %errorlevel% equ 0 (
-    echo [32mDatabase created successfully![0m
-) else (
-    echo [31mFailed to create database.[0m
+REM Check if Python is installed
+python --version >nul 2>&1
+IF %ERRORLEVEL% NEQ 0 (
+    echo Python is not installed.
+    echo Please install Python from https://www.python.org/
+    pause
+    exit
 )
+
+cd campusconnect
+
+REM Activate virtual environment
+call venv\Scripts\activate
+
+
+echo.
+echo Starting Django development server...
+echo.
+cd ..
+cd hostel-static
+
+cd ..
+cd campusconnect
+REM Open browser
+start http://127.0.0.1:5500/hostel-static/index.html
+REM Run server
+python manage.py runserver
+
 
 
 
