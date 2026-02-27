@@ -1,0 +1,1882 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Women's Polytechnic College Hostel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+                                /* ===== MODERN HERO SECTION ===== */
+                                #home {
+                                    min-height: 100vh;
+                                    width: 100vw;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    align-items: center;
+                                    position: relative;
+                                    background: linear-gradient(120deg, #232526 0%, #414345 100%);
+                                    overflow: hidden;
+                                    padding: 0;
+                                }
+                                .hero-bg {
+                                    position: absolute;
+                                    top: 0; left: 0; width: 100%; height: 100%;
+                                    z-index: 0;
+                                    background: linear-gradient(120deg, #232526cc 0%, #ffd70033 100%), url('{% static "assets/img/sur1.jpg" %}') center/cover no-repeat;
+                                    animation: heroGradient 12s ease-in-out infinite alternate;
+                                }
+                                @keyframes heroGradient {
+                                    0% { background-position: 0% 50%, center; }
+                                    100% { background-position: 100% 50%, center; }
+                                }
+                                .hero-glass {
+                                    position: relative;
+                                    z-index: 2;
+                                    margin-top: 110px;
+                                    padding: 48px 36px 56px 36px;
+                                    border-radius: 22px;
+                                    background: rgba(255,255,255,0.13);
+                                    box-shadow: 0 8px 40px 0 #23252633, 0 1.5px 16px #ffd70022;
+                                    backdrop-filter: blur(12px);
+                                    border: 1.5px solid rgba(255,255,255,0.18);
+                                    max-width: 700px;
+                                    min-width: 340px;
+                                    text-align: center;
+                                }
+                                .hero-typing {
+                                    font-family: 'Manrope', 'Poppins', 'Inter', sans-serif;
+                                    font-size: 2.7rem;
+                                    font-weight: 800;
+                                    letter-spacing: 1.5px;
+                                    color: #ffd700;
+                                    background: linear-gradient(90deg, #ffd700 40%, #fffbe6 100%);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    background-clip: text;
+                                    margin-bottom: 18px;
+                                    min-height: 60px;
+                                    min-width: 320px;
+                                    word-break: break-word;
+                                }
+        /* HERO BG CAROUSEL */
+        .hero-bg-carousel {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .hero-bg-slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(.4,0,.2,1);
+            will-change: opacity;
+        }
+        .hero-bg-slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+                                .hero-typing .typed-cursor {
+                                    display: inline-block;
+                                    width: 2px;
+                                    background: #ffd700;
+                                    animation: blink 0.8s steps(1) infinite;
+                                    height: 1.1em;
+                                    vertical-align: bottom;
+                                }
+                                @keyframes blink {
+                                    0%, 100% { opacity: 1; }
+                                    50% { opacity: 0; }
+                                }
+                                .hero-sub {
+                                    font-size: 1.25rem;
+                                    color: #ffe082;
+                                    font-weight: 600;
+                                    letter-spacing: 0.5px;
+                                    margin-bottom: 22px;
+                                    opacity: 0;
+                                    transform: translateY(30px);
+                                    animation: fadeInUp 1.2s 1.1s forwards;
+                                }
+                                .hero-desc {
+                                    font-size: 1.08rem;
+                                    color: #fffbe6;
+                                    margin-bottom: 32px;
+                                    opacity: 0;
+                                    transform: translateY(30px);
+                                    animation: fadeInUp 1.2s 1.5s forwards;
+                                }
+                                .hero-btns {
+                                    display: flex;
+                                    justify-content: center;
+                                    gap: 18px;
+                                    margin-bottom: 18px;
+                                    opacity: 0;
+                                    transform: translateY(30px);
+                                    animation: fadeInUp 1.2s 1.9s forwards;
+                                }
+                                .hero-btn, .hero-btn-outline {
+                                    font-family: inherit;
+                                    font-size: 1.08rem;
+                                    font-weight: 700;
+                                    padding: 13px 38px;
+                                    border-radius: 30px;
+                                    border: none;
+                                    cursor: pointer;
+                                    transition: box-shadow 0.18s, transform 0.18s, background 0.18s, color 0.18s;
+                                    box-shadow: 0 4px 18px #ffd70044;
+                                    outline: none;
+                                    position: relative;
+                                }
+                                .hero-btn {
+                                    background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+                                    color: #232526;
+                                }
+                                .hero-btn-outline {
+                                    background: rgba(255,255,255,0.08);
+                                    color: #ffd700;
+                                    border: 2px solid #ffd700;
+                                }
+                                .hero-btn:hover, .hero-btn-outline:hover {
+                                    transform: scale(1.07);
+                                    box-shadow: 0 8px 32px #ffd70066, 0 1.5px 16px #fffbe633;
+                                }
+                                .hero-btn:active, .hero-btn-outline:active {
+                                    transform: scale(0.97);
+                                }
+                                .scroll-indicator {
+                                    position: absolute;
+                                    left: 50%;
+                                    bottom: 32px;
+                                    transform: translateX(-50%);
+                                    z-index: 3;
+                                    width: 32px;
+                                    height: 54px;
+                                    border-radius: 18px;
+                                    border: 2.5px solid #ffd700;
+                                    display: flex;
+                                    align-items: flex-start;
+                                    justify-content: center;
+                                    background: rgba(255,255,255,0.07);
+                                    box-shadow: 0 2px 12px #ffd70022;
+                                }
+                                .scroll-indicator-dot {
+                                    width: 7px;
+                                    height: 7px;
+                                    background: #ffd700;
+                                    border-radius: 50%;
+                                    margin-top: 7px;
+                                    animation: scrollDot 1.5s infinite cubic-bezier(.4,0,.2,1);
+                                }
+                                @keyframes scrollDot {
+                                    0% { opacity: 0.7; transform: translateY(0); }
+                                    50% { opacity: 1; transform: translateY(22px); }
+                                    100% { opacity: 0.7; transform: translateY(0); }
+                                }
+
+                                /* ===== FEATURE CARDS ===== */
+                                .features-section {
+                                    background: linear-gradient(120deg, #fffbe6 0%, #f4f6f9 100%);
+                                    padding: 80px 0 60px 0;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                }
+                                .features-title {
+                                    font-size: 2rem;
+                                    font-weight: 700;
+                                    color: #232526;
+                                    margin-bottom: 36px;
+                                    letter-spacing: 1px;
+                                }
+                                .features-grid {
+                                    display: grid;
+                                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                                    gap: 32px;
+                                    width: 100%;
+                                    max-width: 900px;
+                                }
+                                .feature-card {
+                                    background: rgba(255,255,255,0.7);
+                                    border-radius: 18px;
+                                    box-shadow: 0 6px 24px #ffd70022, 0 1.5px 16px #23252611;
+                                    padding: 38px 24px 30px 24px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    transition: transform 0.25s, box-shadow 0.25s;
+                                    opacity: 0;
+                                    transform: translateY(40px);
+                                }
+                                .feature-card.visible {
+                                    opacity: 1;
+                                    transform: none;
+                                    transition: opacity 0.7s, transform 0.7s;
+                                }
+                                .feature-card i {
+                                    font-size: 2.2rem;
+                                    color: #ffd700;
+                                    margin-bottom: 18px;
+                                }
+                                .feature-card h3 {
+                                    font-size: 1.18rem;
+                                    font-weight: 700;
+                                    margin-bottom: 10px;
+                                    color: #232526;
+                                }
+                                .feature-card p {
+                                    color: #444;
+                                    font-size: 1rem;
+                                    text-align: center;
+                                }
+                                .feature-card:hover {
+                                    transform: translateY(-10px) scale(1.04);
+                                    box-shadow: 0 12px 36px #ffd70033, 0 1.5px 16px #23252622;
+                                }
+
+                                /* ===== STATS COUNTER ===== */
+                                .stats-section {
+                                    background: linear-gradient(90deg, #232526 0%, #ffd700 100%);
+                                    color: #232526;
+                                    padding: 60px 0 50px 0;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                }
+                                .stats-title {
+                                    font-size: 2rem;
+                                    font-weight: 700;
+                                    color: #fffbe6;
+                                    margin-bottom: 36px;
+                                    letter-spacing: 1px;
+                                }
+                                .stats-grid {
+                                    display: flex;
+                                    gap: 48px;
+                                    flex-wrap: wrap;
+                                    justify-content: center;
+                                }
+                                .stat-card {
+                                    background: rgba(255,255,255,0.18);
+                                    border-radius: 18px;
+                                    box-shadow: 0 6px 24px #23252622, 0 1.5px 16px #ffd70011;
+                                    padding: 32px 38px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    min-width: 160px;
+                                    margin-bottom: 18px;
+                                }
+                                .stat-number {
+                                    font-size: 2.2rem;
+                                    font-weight: 800;
+                                    color: #ffd700;
+                                    margin-bottom: 8px;
+                                }
+                                .stat-label {
+                                    font-size: 1.08rem;
+                                    color: #fffbe6;
+                                    font-weight: 600;
+                                }
+
+                                /* ===== TESTIMONIALS SLIDER ===== */
+                                .testimonials-section {
+                                    background: linear-gradient(120deg, #fffbe6 0%, #f4f6f9 100%);
+                                    padding: 80px 0 60px 0;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                }
+                                .testimonials-title {
+                                    font-size: 2rem;
+                                    font-weight: 700;
+                                    color: #232526;
+                                    margin-bottom: 36px;
+                                    letter-spacing: 1px;
+                                }
+                                .testimonial-slider {
+                                    max-width: 700px;
+                                    width: 100%;
+                                    overflow: hidden;
+                                    position: relative;
+                                }
+                                .testimonial-track {
+                                    display: flex;
+                                    transition: 0.7s cubic-bezier(.4,0,.2,1);
+                                }
+                                .testimonial-card {
+                                    min-width: 100%;
+                                    background: rgba(255,255,255,0.8);
+                                    border-radius: 18px;
+                                    box-shadow: 0 6px 24px #ffd70022, 0 1.5px 16px #23252611;
+                                    padding: 38px 32px 30px 32px;
+                                    margin-right: 24px;
+                                    font-size: 1.08rem;
+                                    color: #232526;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                }
+                                .testimonial-card strong {
+                                    color: #ffd700;
+                                    font-size: 1.1rem;
+                                    margin-bottom: 8px;
+                                }
+                                .testimonial-nav {
+                                    display: flex;
+                                    gap: 18px;
+                                    justify-content: center;
+                                    margin-top: 18px;
+                                }
+                                .testimonial-dot {
+                                    width: 12px; height: 12px;
+                                    border-radius: 50%;
+                                    background: #ffd70055;
+                                    border: 2px solid #ffd700;
+                                    cursor: pointer;
+                                    transition: background 0.2s, border 0.2s;
+                                }
+                                .testimonial-dot.active {
+                                    background: #ffd700;
+                                    border: 2px solid #232526;
+                                }
+
+                                /* ===== CTA SECTION ===== */
+                                .cta-section {
+                                    background: linear-gradient(90deg, #ffd700 0%, #232526 100%);
+                                    color: #232526;
+                                    padding: 70px 0 60px 0;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                }
+                                .cta-title {
+                                    font-size: 2.1rem;
+                                    font-weight: 800;
+                                    color: #232526;
+                                    margin-bottom: 18px;
+                                    letter-spacing: 1px;
+                                }
+                                .cta-desc {
+                                    font-size: 1.15rem;
+                                    color: #232526;
+                                    margin-bottom: 32px;
+                                    max-width: 600px;
+                                    text-align: center;
+                                }
+                                .cta-btns {
+                                    display: flex;
+                                    gap: 18px;
+                                }
+                                .cta-btn, .cta-btn-outline {
+                                    font-family: inherit;
+                                    font-size: 1.08rem;
+                                    font-weight: 700;
+                                    padding: 13px 38px;
+                                    border-radius: 30px;
+                                    border: none;
+                                    cursor: pointer;
+                                    transition: box-shadow 0.18s, transform 0.18s, background 0.18s, color 0.18s;
+                                    box-shadow: 0 4px 18px #ffd70044;
+                                    outline: none;
+                                    position: relative;
+                                }
+                                .cta-btn {
+                                    background: linear-gradient(90deg, #232526 60%, #ffd700 100%);
+                                    color: #ffd700;
+                                }
+                                .cta-btn-outline {
+                                    background: rgba(255,255,255,0.08);
+                                    color: #232526;
+                                    border: 2px solid #232526;
+                                }
+                                .cta-btn:hover, .cta-btn-outline:hover {
+                                    transform: scale(1.07);
+                                    box-shadow: 0 8px 32px #ffd70066, 0 1.5px 16px #23252633;
+                                }
+                                .cta-btn:active, .cta-btn-outline:active {
+                                    transform: scale(0.97);
+                                }
+
+                                /* ===== RESPONSIVE ===== */
+                                @media (max-width: 900px) {
+                                    .hero-glass { padding: 32px 10px 38px 10px; }
+                                    .features-grid { grid-template-columns: 1fr; }
+                                    .stats-grid { gap: 18px; }
+                                    .testimonial-card { padding: 28px 8px 22px 8px; }
+                                }
+                                @media (max-width: 600px) {
+                                    .hero-glass { margin-top: 70px; }
+                                    .hero-typing { font-size: 1.3rem; }
+                                    .features-title, .stats-title, .testimonials-title, .cta-title { font-size: 1.2rem; }
+                                    .features-section, .testimonials-section, .cta-section { padding: 40px 0 30px 0; }
+                                }
+                        /* MODERN HERO UI & TYPING ANIMATION */
+                        #home {
+                            min-height: 100vh;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            text-align: center;
+                            background: linear-gradient(120deg, #232526 0%, #414345 100%);
+                            color: #fff;
+                            position: relative;
+                            overflow: hidden;
+                            padding-top: 90px;
+                        }
+                        .hero-glow {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            width: 700px;
+                            height: 700px;
+                            background: radial-gradient(circle, #ffd70033 0%, #23252600 70%);
+                            transform: translate(-50%, -50%);
+                            z-index: 0;
+                            pointer-events: none;
+                            animation: heroGlowPulse 6s ease-in-out infinite;
+                        }
+                        @keyframes heroGlowPulse {
+                            0%, 100% { opacity: 0.7; }
+                            50% { opacity: 1; }
+                        }
+                        .hero-typing {
+                            font-size: 48px;
+                            font-weight: 800;
+                            letter-spacing: 1.5px;
+                            color: #ffd700;
+                            background: linear-gradient(90deg, #ffd700 40%, #fffbe6 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            background-clip: text;
+                            margin-bottom: 12px;
+                            z-index: 2;
+                            min-height: 60px;
+                        }
+                        .hero-typing .typed-cursor {
+                            display: inline-block;
+                            width: 2px;
+                            background: #ffd700;
+                            animation: blink 0.8s steps(1) infinite;
+                            height: 1.1em;
+                            vertical-align: bottom;
+                        }
+                        @keyframes blink {
+                            0%, 100% { opacity: 1; }
+                            50% { opacity: 0; }
+                        }
+                        .hero-sub {
+                            font-size: 22px;
+                            color: #ffe082;
+                            margin-bottom: 30px;
+                            font-weight: 600;
+                            letter-spacing: 0.5px;
+                            z-index: 2;
+                            opacity: 0;
+                            transform: translateY(30px);
+                            animation: fadeInUp 1.2s 1.2s forwards;
+                        }
+                        .hero-desc {
+                            max-width: 600px;
+                            margin: 18px auto 32px auto;
+                            font-size: 18px;
+                            color: #fffbe6;
+                            z-index: 2;
+                            opacity: 0;
+                            transform: translateY(30px);
+                            animation: fadeInUp 1.2s 1.6s forwards;
+                        }
+                        .hero-btn {
+                            display: inline-block;
+                            margin-top: 18px;
+                            padding: 13px 38px;
+                            font-size: 18px;
+                            font-weight: 700;
+                            color: #232526;
+                            background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+                            border: none;
+                            border-radius: 30px;
+                            box-shadow: 0 4px 18px #ffd70044;
+                            cursor: pointer;
+                            transition: transform 0.18s, box-shadow 0.18s;
+                            z-index: 2;
+                            opacity: 0;
+                            transform: translateY(30px);
+                            animation: fadeInUp 1.2s 2s forwards;
+                        }
+                        .hero-btn:hover {
+                            transform: scale(1.07);
+                            box-shadow: 0 8px 32px #ffd70066;
+                        }
+                        @media(max-width:700px) {
+                            .hero-typing { font-size: 30px; }
+                            .hero-glow { width: 350px; height: 350px; }
+                        }
+                /* TEXT ANIMATION */
+                .fade-in {
+                    opacity: 0;
+                    transform: translateY(30px);
+                    animation: fadeInUp 1.1s forwards;
+                }
+                .fade-in.delay-1 { animation-delay: 0.2s; }
+                .fade-in.delay-2 { animation-delay: 0.4s; }
+                .fade-in.delay-3 { animation-delay: 0.6s; }
+                .fade-in.delay-4 { animation-delay: 0.8s; }
+                .fade-in.delay-5 { animation-delay: 1s; }
+                @keyframes fadeInUp {
+                    to {
+                        opacity: 1;
+                        transform: none;
+                    }
+                }
+
+                /* CARD ANIMATION */
+                .card-animate {
+                    opacity: 0;
+                    transform: translateY(40px) scale(0.98);
+                    transition: opacity 0.7s, transform 0.7s;
+                }
+                .card-animate.visible {
+                    opacity: 1;
+                    transform: none;
+                }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+              font-family: 'Manrope', sans-serif;
+              background: #f4f6f9;
+              color: #222;
+              overflow-x: hidden;
+              padding-top: 70px; /* Offset for fixed navbar */
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 60px;
+            z-index: 1000;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .logo-area img {
+            height: 48px;
+        }
+
+        .logo-area h3 {
+            font-size: 16px;
+            line-height: 1.3;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .login-btn {
+            border: 1.5px solid #fff;
+            padding: 7px 20px;
+            border-radius: 30px;
+            background: transparent;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+        }
+        .login-btn:hover {
+            background: #ffd700;
+            color: #111;
+            border-color: #ffd700;
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 100px 8%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* HERO */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #000, #2b2b2b);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            padding-top: 90px;
+        }
+
+        #home h1 {
+            font-size: 44px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        #home h4 {
+            color: #ffd700;
+            margin-bottom: 28px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        /* SNOW */
+        .snow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 8px;
+            animation: fall linear infinite
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh)
+            }
+        }
+
+        /* HERO CAROUSEL (UNCHANGED) */
+        .carousel {
+            position: relative;
+            width: 85%;
+            max-width: 950px;
+            overflow: hidden;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            z-index: 2;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: 0.5s ease-in-out;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 420px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 22px;
+            transition: background 0.2s;
+        }
+        .carousel-btn:hover {
+            background: #ffd700;
+            color: #111;
+        }
+        .prev {
+            left: 18px;
+        }
+        .next {
+            right: 18px;
+        }
+
+        /* GRID */
+        .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+                gap: 32px;
+            }
+            @media (max-width: 700px) {
+                .grid {
+                    grid-template-columns: 1fr;
+                    gap: 18px;
+                }
+        }
+
+        .card {
+            background: white;
+            padding: 32px 28px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card:hover {
+            transform: translateY(-7px) scale(1.03);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.13);
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .card i {
+            font-size: 32px;
+            margin-bottom: 14px;
+            color: #ffd700;
+        }
+
+        /* REVIEW SLIDER */
+        .review-container {
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+            max-width: 980px;
+        }
+
+        .review-track {
+            display: flex;
+            transition: 0.6s;
+        }
+
+        .review-card {
+            min-width: 320px;
+            background: white;
+            margin-right: 24px;
+            padding: 26px 22px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.09);
+            font-size: 15px;
+        }
+
+        /* FORMS */
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 18px;
+            border: none;
+            border-radius: 7px;
+            background: #eee;
+            font-size: 15px;
+        }
+
+        .contact-form button {
+            padding: 12px 22px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .contact-form button:hover {
+            background: #ffd700;
+            color: #111;
+        }
+
+        /* MAP */
+        iframe {
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* FOOTER */
+        footer {
+            background: #111;
+            color: #ccc;
+            text-align: center;
+            padding: 44px 0;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        @media(max-width: 1100px) {
+            .carousel {
+                width: 98%;
+            }
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            }
+        }
+        @media(max-width:900px) {
+            nav {
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px 10px;
+            }
+            section {
+                padding: 80px 3%;
+            }
+            .carousel-slide {
+                height: 260px;
+            }
+        }
+        @media(max-width:600px) {
+            .carousel {
+                width: 100%;
+            }
+            .carousel-slide {
+                height: 160px;
+            }
+            .review-card {
+                min-width: 90vw;
+                padding: 16px 8px;
+            }
+        }
+    </style>
+    
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav>
+            <div class="logo-area">
+                <img src="{% static 'assets/img/clogo.png' %}" alt="GWPC Hostel Logo" aria-label="Hostel Logo">
+                <h3>GWPC Hostel<br>Kayamkulam</h3>
+            </div>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#facilities">Facilities</a></li>
+            <li><a href="#rooms">Rooms</a></li>
+            <li><a href="#rules">Rules</a></li>
+            <li><a href="#mess">Mess</a></li>
+            <li><a href="#warden">Administration</a></li>
+            <li><a href="#complaint">Complaint</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="/login/" class="login-btn">Student Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section id="home">
+           <div class="hero-bg"></div>
+           <div class="snow-container" aria-hidden="true"></div>
+        <div class="hero-glass">
+                <h1 class="hero-title">Smart Hostel Management</h1>
+            <div class="hero-sub">Smart Hostel Management &bull; Secure. Digital. Efficient.</div>
+            <div class="hero-desc">
+                Welcome to the Government Women's Polytechnic College Hostel, Kayamkulam. Experience a secure, vibrant, and supportive environment designed for academic excellence and personal growth. Discover our modern facilities, caring staff, and a community that feels like home.
+            </div>
+            <div class="hero-btns">
+                <a href="#facilities" class="hero-btn">Explore Facilities</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-indicator-dot"></div>
+        </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section class="features-section">
+            <div class="features-title">Why Choose Our Hostel?</div>
+            <div class="features-grid">
+                <div class="feature-card"><i class="fa fa-shield"></i><h3>24/7 Security</h3><p>Round-the-clock surveillance and secure entry for peace of mind.</p></div>
+                <div class="feature-card"><i class="fa fa-wifi"></i><h3>High-Speed WiFi</h3><p>Reliable internet access for all your academic and personal needs.</p></div>
+                <div class="feature-card"><i class="fa fa-cutlery"></i><h3>Nutritious Meals</h3><p>Balanced, hygienic food served daily with veg & non-veg options.</p></div>
+                <div class="feature-card"><i class="fa fa-bed"></i><h3>Modern Rooms</h3><p>Furnished, well-ventilated rooms for a comfortable stay.</p></div>
+            </div>
+        </section>
+
+        <!-- STATS COUNTER SECTION -->
+        <section class="stats-section">
+            <div class="stats-title">Our Hostel in Numbers</div>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-number" data-count="200">0</div><div class="stat-label">Students</div></div>
+                <div class="stat-card"><div class="stat-number" data-count="50">0</div><div class="stat-label">Rooms</div></div>
+                <div class="stat-card"><div class="stat-number" data-count="10">0</div><div class="stat-label">Staff</div></div>
+                <div class="stat-card"><div class="stat-number" data-count="100">0</div><div class="stat-label">Events/Year</div></div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS SECTION -->
+        <section class="testimonials-section">
+            <div class="testimonials-title">What Our Students Say</div>
+            <div class="testimonial-slider">
+                <div class="testimonial-track" id="testimonialTrack">
+                    <div class="testimonial-card"><strong>Anjali S.</strong><p>The hostel maintains excellent discipline and safety standards. The wardens are supportive and approachable.</p></div>
+                    <div class="testimonial-card"><strong>Reshma P.</strong><p>Rooms are clean and well ventilated. Study atmosphere is peaceful and suitable for exam preparation.</p></div>
+                    <div class="testimonial-card"><strong>Fathima K.</strong><p>Mess food quality is consistently good. Weekly menu is balanced and hygienic.</p></div>
+                    <div class="testimonial-card"><strong>Meera L.</strong><p>Security arrangements including CCTV surveillance make students feel safe at all times.</p></div>
+                </div>
+            </div>
+            <div class="testimonial-nav" id="testimonialNav"></div>
+        </section>
+
+        <!-- CTA SECTION -->
+        <section class="cta-section">
+            <div class="cta-title">Ready to Join Our Hostel?</div>
+            <div class="cta-desc">Experience a safe, modern, and empowering environment for your academic journey. Apply now or contact us for more information!</div>
+            <div class="cta-btns">
+                <a href="/login/" class="cta-btn">Apply Now</a>
+                <a href="#contact" class="cta-btn-outline">Contact Us</a>
+            </div>
+    </section>
+
+    <!-- FACILITIES -->
+        <section id="facilities" class="facilities-modern-section">
+            <div class="facilities-title-area">
+                <h2 class="facilities-title">Our Hostel Facilities</h2>
+                <div class="facilities-underline"></div>
+                <p class="facilities-intro">We provide a comprehensive range of facilities to ensure a safe, comfortable, and enriching hostel experience. Every amenity is thoughtfully designed to support your academic journey, well-being, and personal growth.</p>
+            </div>
+            <div class="facilities-grid">
+                <div class="facility-card fade-in delay-1">
+                    <div class="facility-icon"><i class="fa fa-bed"></i></div>
+                    <div class="facility-title">Accommodation & Rooms</div>
+                    <div class="facility-desc">Spacious, well-ventilated rooms with comfortable beds, study desks, ample storage, and natural light. Single, double, and triple sharing options available, all maintained to high standards for privacy and comfort.</div>
+                </div>
+                <div class="facility-card fade-in delay-2">
+                    <div class="facility-icon"><i class="fa fa-shield"></i></div>
+                    <div class="facility-title">Security & Surveillance</div>
+                    <div class="facility-desc">24/7 security with trained staff, CCTV surveillance in common areas, secure entry/exit protocols, and visitor management to ensure a safe and protected environment for all residents.</div>
+                </div>
+                <div class="facility-card fade-in delay-3">
+                    <div class="facility-icon"><i class="fa fa-cutlery"></i></div>
+                    <div class="facility-title">Food & Dining</div>
+                    <div class="facility-desc">Nutritious, hygienic meals served in a spacious dining hall. Weekly menu with vegetarian and non-vegetarian options, special diet accommodations, and regular quality checks for taste and safety.</div>
+                </div>
+                <div class="facility-card fade-in delay-4">
+                    <div class="facility-icon"><i class="fa fa-wifi"></i></div>
+                    <div class="facility-title">Internet & Study Areas</div>
+                    <div class="facility-desc">High-speed WiFi throughout the hostel, dedicated study rooms, and quiet zones for focused learning, group discussions, and online research, supporting academic excellence.</div>
+                </div>
+                <div class="facility-card fade-in delay-5">
+                    <div class="facility-icon"><i class="fa fa-bolt"></i></div>
+                    <div class="facility-title">Utilities & Maintenance</div>
+                    <div class="facility-desc">Reliable power backup, purified drinking water, regular cleaning, and prompt maintenance services to ensure uninterrupted comfort and a healthy living environment.</div>
+                </div>
+                <div class="facility-card fade-in delay-6">
+                    <div class="facility-icon"><i class="fa fa-users"></i></div>
+                    <div class="facility-title">Recreation & Common Areas</div>
+                    <div class="facility-desc">Well-equipped recreation rooms, TV lounge, indoor games, landscaped gardens, and common areas for relaxation, socializing, and community events.</div>
+                </div>
+                <div class="facility-card fade-in delay-7">
+                    <div class="facility-icon"><i class="fa fa-medkit"></i></div>
+                    <div class="facility-title">Medical & Emergency Support</div>
+                    <div class="facility-desc">On-call medical assistance, first-aid kits, tie-ups with nearby hospitals, and emergency response protocols to ensure health and safety at all times.</div>
+                </div>
+                <div class="facility-card fade-in delay-8">
+                    <div class="facility-icon"><i class="fa fa-tint"></i></div>
+                    <div class="facility-title">Laundry & Housekeeping</div>
+                    <div class="facility-desc">Regular housekeeping, in-house laundry services, and well-maintained washrooms to provide a clean, hygienic, and hassle-free living experience.</div>
+                </div>
+            </div>
+        </section>
+        <style>
+        .facilities-modern-section {
+            width: 100%;
+            background: linear-gradient(120deg, #f4f6f9 0%, #fffbe6 100%);
+            padding: 80px 0 60px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .facilities-title-area {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .facilities-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #232526;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .facilities-underline {
+            width: 70px;
+            height: 5px;
+            background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+            border-radius: 3px;
+            margin: 0 auto 18px auto;
+        }
+        .facilities-intro {
+            font-size: 1.13rem;
+            color: #444;
+            max-width: 700px;
+            margin: 0 auto 0 auto;
+        }
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 36px;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .facility-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            box-shadow: 0 6px 32px #ffd70022, 0 1.5px 16px #23252611;
+            padding: 38px 28px 32px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.28s cubic-bezier(.4,0,.2,1), box-shadow 0.28s, background 0.28s;
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            outline: none;
+        }
+        .facility-card.visible {
+            opacity: 1;
+            transform: none;
+            transition: opacity 0.7s, transform 0.7s;
+        }
+        .facility-card:focus {
+            box-shadow: 0 0 0 3px #ffd70088;
+        }
+        .facility-icon {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 18px;
+            text-shadow: 0 2px 12px #ffd70033;
+        }
+        .facility-title {
+            font-size: 1.18rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #232526;
+            text-align: center;
+        }
+        .facility-desc {
+            color: #444;
+            font-size: 1.04rem;
+            text-align: center;
+            margin-bottom: 0;
+        }
+        .facility-card:hover, .facility-card:focus {
+            transform: translateY(-10px) scale(1.04);
+            box-shadow: 0 16px 48px #ffd70044, 0 1.5px 16px #23252622;
+            background: linear-gradient(120deg, #fffbe6 60%, #ffd70011 100%);
+        }
+        @media (max-width: 1100px) {
+            .facilities-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 700px) {
+            .facilities-grid { grid-template-columns: 1fr; gap: 22px; }
+            .facilities-modern-section { padding: 40px 0 30px 0; }
+            .facility-card { padding: 28px 10px 22px 10px; }
+            .facilities-title { font-size: 1.3rem; }
+        }
+        </style>
+        <script>
+        src="{% static 'js/script.js' %}"
+        // Facilities scroll-triggered fade-in animation (staggered)
+        function animateFacilityCards() {
+            document.querySelectorAll('.facility-card').forEach((card, idx) => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.92) {
+                    setTimeout(() => card.classList.add('visible'), idx * 120);
+                }
+            });
+        }
+        window.addEventListener('scroll', animateFacilityCards);
+        window.addEventListener('DOMContentLoaded', animateFacilityCards);
+        </script>
+
+    <!-- ROOM TYPES -->
+        <section id="rooms" class="rooms-modern-section">
+            <div class="rooms-title-area">
+                <h2 class="rooms-title">Room Types &amp; Fees</h2>
+                <div class="rooms-underline"></div>
+                <p class="rooms-intro">Select from our range of room options, each designed for comfort, privacy, and affordability. All rooms are well-ventilated, fully furnished, and maintained to the highest standards for a premium hostel experience.</p>
+            </div>
+            <div class="rooms-grid">
+                <div class="room-card fade-in delay-1">
+                    <div class="room-img"><img src="{% static 'assets/img/single.jpg' %}" alt="Single Room" loading="lazy"></div>
+                    <div class="room-badge">Most Popular</div>
+                    <div class="room-title">Single Sharing Room</div>
+                    <div class="room-desc">Private occupancy with a spacious layout, individual study desk, personal wardrobe, and high-speed WiFi. Ideal for those who value privacy and focus.</div>
+                    <ul class="room-features">
+                        <li><i class="fa fa-bed"></i> Single Bed</li>
+                        <li><i class="fa fa-desktop"></i> Study Table</li>
+                        <li><i class="fa fa-archive"></i> Personal Wardrobe</li>
+                        <li><i class="fa fa-bath"></i> Attached Bathroom</li>
+                        <li><i class="fa fa-wifi"></i> High-speed WiFi</li>
+                    </ul>
+                    <div class="room-fee-area">
+                        <div class="room-fee-label">Monthly Fee</div>
+                        <div class="room-fee-highlight">₹6,500</div>
+                        <div class="room-fee-label">Security Deposit</div>
+                        <div class="room-fee-deposit">₹5,000</div>
+                    </div>
+                    <a href="/login/" class="room-btn">Apply Now</a>
+                </div>
+                <div class="room-card fade-in delay-2">
+                    <div class="room-img"><img src="{% static 'assets/img/double.jpg' %}" alt="Double Sharing Room" loading="lazy"></div>
+                    <div class="room-title">Double Sharing Room</div>
+                    <div class="room-desc">Shared with one roommate, this room offers balanced privacy and affordability. Separate storage, study desks, and WiFi for each resident.</div>
+                    <ul class="room-features">
+                        <li><i class="fa fa-bed"></i> Twin Beds</li>
+                        <li><i class="fa fa-desktop"></i> 2 Study Tables</li>
+                        <li><i class="fa fa-archive"></i> Separate Wardrobes</li>
+                        <li><i class="fa fa-bath"></i> Attached Bathroom</li>
+                        <li><i class="fa fa-wifi"></i> High-speed WiFi</li>
+                    </ul>
+                    <div class="room-fee-area">
+                        <div class="room-fee-label">Monthly Fee</div>
+                        <div class="room-fee-highlight">₹4,500</div>
+                        <div class="room-fee-label">Security Deposit</div>
+                        <div class="room-fee-deposit">₹4,000</div>
+                    </div>
+                    <a href="#contact" class="room-btn room-btn-outline">Enquire</a>
+                </div>
+                <div class="room-card fade-in delay-3">
+                    <div class="room-img"><img src="{% static 'assets/img/tripple.jpg' %}" alt="Triple Sharing Room" loading="lazy"></div>
+                    <div class="room-title">Triple Sharing Room</div>
+                    <div class="room-desc">Budget-friendly option with a compact, functional layout. Shared study area, individual beds, and secure storage for each resident.</div>
+                    <ul class="room-features">
+                        <li><i class="fa fa-bed"></i> 3 Beds</li>
+                        <li><i class="fa fa-desktop"></i> Shared Study Table</li>
+                        <li><i class="fa fa-archive"></i> Individual Lockers</li>
+                        <li><i class="fa fa-bath"></i> Common Bathroom</li>
+                        <li><i class="fa fa-wifi"></i> High-speed WiFi</li>
+                    </ul>
+                    <div class="room-fee-area">
+                        <div class="room-fee-label">Monthly Fee</div>
+                        <div class="room-fee-highlight">₹3,500</div>
+                        <div class="room-fee-label">Security Deposit</div>
+                        <div class="room-fee-deposit">₹3,000</div>
+                    </div>
+                    <a href="#contact" class="room-btn room-btn-outline">Enquire</a>
+                </div>
+            </div>
+            <div class="rooms-comparison-table-area">
+                <table class="rooms-comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Room Type</th>
+                            <th>Occupancy</th>
+                            <th>Bathroom</th>
+                            <th>WiFi</th>
+                            <th>Monthly Fee</th>
+                            <th>Deposit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Single Sharing</td>
+                            <td>1</td>
+                            <td>Attached</td>
+                            <td>Yes</td>
+                            <td>₹6,500</td>
+                            <td>₹5,000</td>
+                        </tr>
+                        <tr>
+                            <td>Double Sharing</td>
+                            <td>2</td>
+                            <td>Attached</td>
+                            <td>Yes</td>
+                            <td>₹4,500</td>
+                            <td>₹4,000</td>
+                        </tr>
+                        <tr>
+                            <td>Triple Sharing</td>
+                            <td>3</td>
+                            <td>Common</td>
+                            <td>Yes</td>
+                            <td>₹3,500</td>
+                            <td>₹3,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <style>
+
+            .card-animate.visible {
+    opacity: 1;
+    transform: none;
+}
+        .rooms-modern-section {
+            width: 100%;
+            background: linear-gradient(120deg, #fffbe6 0%, #f4f6f9 100%);
+            padding: 80px 0 60px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .rooms-title-area {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .rooms-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #232526;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .rooms-underline {
+            width: 70px;
+            height: 5px;
+            background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+            border-radius: 3px;
+            margin: 0 auto 18px auto;
+        }
+        .rooms-intro {
+            font-size: 1.13rem;
+            color: #444;
+            max-width: 700px;
+            margin: 0 auto 0 auto;
+        }
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 36px;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto 36px auto;
+        }
+        .room-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 6px 32px #ffd70022, 0 1.5px 16px #23252611;
+            padding: 0 0 32px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, background 0.3s;
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            outline: none;
+            position: relative;
+            min-width: 0;
+        }
+        .room-card.visible {
+            opacity: 1;
+            transform: none;
+            transition: opacity 0.7s, transform 0.7s;
+        }
+        .room-card:focus {
+            box-shadow: 0 0 0 3px #ffd70088;
+        }
+        .room-img {
+            width: 100%;
+            height: 180px;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+            background: #f4f6f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .room-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .room-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+            color: #232526;
+            font-size: 0.98rem;
+            font-weight: 700;
+            padding: 5px 18px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px #ffd70033;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .room-title {
+            font-size: 1.18rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #232526;
+            text-align: center;
+            margin-top: 6px;
+        }
+        .room-desc {
+            color: #444;
+            font-size: 1.04rem;
+            text-align: center;
+            margin-bottom: 12px;
+            min-height: 48px;
+        }
+        .room-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 18px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 18px;
+            justify-content: center;
+        }
+        .room-features li {
+            display: flex;
+            align-items: center;
+            font-size: 0.98rem;
+            color: #232526;
+            gap: 7px;
+            background: #fffbe6;
+            border-radius: 12px;
+            padding: 5px 13px;
+            box-shadow: 0 1px 4px #ffd70011;
+        }
+        .room-features i {
+            color: #ffd700;
+            font-size: 1.1em;
+        }
+        .room-fee-area {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
+            margin-top: 2px;
+        }
+        .room-fee-label {
+            font-size: 0.98rem;
+            color: #888;
+            margin-bottom: 2px;
+        }
+        .room-fee-highlight {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #ffd700;
+            background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+            animation: feePulse 2.2s infinite cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes feePulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.25); }
+        }
+        .room-fee-deposit {
+            font-size: 1.13rem;
+            font-weight: 700;
+            color: #232526;
+            margin-bottom: 2px;
+        }
+        .room-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 11px 34px;
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 4px 18px #ffd70044;
+            cursor: pointer;
+            transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s;
+            outline: none;
+            text-align: center;
+            text-decoration: none;
+        }
+        .room-btn-outline {
+            background: rgba(255,255,255,0.08);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+        }
+        .room-btn:hover, .room-btn:focus {
+            transform: scale(1.07);
+            box-shadow: 0 8px 32px #ffd70066, 0 1.5px 16px #fffbe633;
+            background: linear-gradient(90deg, #fffbe6 60%, #ffd700 100%);
+            color: #232526;
+        }
+        .room-btn-outline:hover, .room-btn-outline:focus {
+            background: #ffd700;
+            color: #232526;
+            border-color: #ffd700;
+        }
+        .room-card:hover, .room-card:focus {
+            transform: translateY(-10px) scale(1.04);
+            box-shadow: 0 16px 48px #ffd70044, 0 1.5px 16px #23252622;
+            background: linear-gradient(120deg, #fffbe6 60%, #ffd70011 100%);
+        }
+        @media (max-width: 1100px) {
+            .rooms-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 700px) {
+            .rooms-grid { grid-template-columns: 1fr; gap: 22px; }
+            .rooms-modern-section { padding: 40px 0 30px 0; }
+            .room-card { padding: 0 0 18px 0; }
+            .rooms-title { font-size: 1.3rem; }
+            .room-img { height: 120px; }
+        }
+        .rooms-comparison-table-area {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 0 auto;
+            overflow-x: auto;
+        }
+        .rooms-comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px #ffd70022;
+            margin-top: 18px;
+            font-size: 1rem;
+            overflow: hidden;
+        }
+        .rooms-comparison-table th, .rooms-comparison-table td {
+            padding: 13px 8px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        .rooms-comparison-table th {
+            background: #ffd700;
+            color: #232526;
+            font-weight: 700;
+        }
+        .rooms-comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        </style>
+        <script>
+        // Rooms scroll-triggered fade-in animation (staggered)
+        function animateRoomCards() {
+            document.querySelectorAll('.room-card').forEach((card, idx) => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.92) {
+                    setTimeout(() => card.classList.add('visible'), idx * 120);
+                }
+            });
+        }
+        window.addEventListener('scroll', animateRoomCards);
+        window.addEventListener('DOMContentLoaded', animateRoomCards);
+        </script>
+
+    <!-- RULES -->
+    <section id="rules">
+        <div class="section-title">
+            <h2>Hostel Rules</h2>
+        </div>
+        <p style="max-width:700px;margin:0 auto 36px auto;font-size:17px;text-align:center;color:#444;">
+            To ensure a harmonious and safe living environment, all residents are expected to follow these simple rules. Your cooperation helps maintain discipline and comfort for everyone.
+        </p>
+        <ul style="max-width:900px;margin:auto;line-height:2.1;font-size:16px;padding-left:18px;">
+            <li>Curfew: 10PM weekdays, 11PM weekends.</li>
+            <li>Guests: 10AM–6PM.</li>
+            <li>No alcohol, smoking, drugs.</li>
+            <li>Quiet hours: 10PM–7AM.</li>
+            <li>Weekly room inspection.</li>
+            <li>Fees due by 10th every month.</li>
+        </ul>
+    </section>
+
+    <!-- MESS MENU -->
+    <section id="mess">
+        <div class="section-title">
+            <h2>Weekly Mess Menu</h2>
+        </div>
+        <p style="max-width:700px;margin:0 auto 36px auto;font-size:17px;text-align:center;color:#444;">
+            Enjoy a variety of delicious and nutritious meals prepared fresh every day. Our mess menu is thoughtfully planned to provide a balanced diet and cater to different tastes throughout the week.
+        </p>
+        <div style="overflow-x:auto;max-width:900px;margin:0 auto 24px auto;">
+            <table style="width:100%;border-collapse:collapse;background:white;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.07);overflow:hidden;">
+                <thead style="background:#ffd700;color:#111;font-size:17px;">
+                    <tr>
+                        <th style="padding:14px 8px;border-bottom:2px solid #eee;">Day</th>
+                        <th style="padding:14px 8px;border-bottom:2px solid #eee;">Breakfast</th>
+                        <th style="padding:14px 8px;border-bottom:2px solid #eee;">Lunch</th>
+                        <th style="padding:14px 8px;border-bottom:2px solid #eee;">Dinner</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size:15px;color:#444;">
+                    <tr>
+                        <td style="padding:10px 8px;">Monday</td>
+                        <td style="padding:10px 8px;">Idli, Sambar</td>
+                        <td style="padding:10px 8px;">Rice, Sambar, Veg Curry</td>
+                        <td style="padding:10px 8px;">Chapathi, Veg Kurma</td>
+                    </tr>
+                    <tr style="background:#faf8e6;">
+                        <td style="padding:10px 8px;">Tuesday</td>
+                        <td style="padding:10px 8px;">Dosa, Chutney</td>
+                        <td style="padding:10px 8px;">Rice, Rasam, Beans Thoran</td>
+                        <td style="padding:10px 8px;">Fried Rice, Gobi Manchurian</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px 8px;">Wednesday</td>
+                        <td style="padding:10px 8px;">Puttu, Kadala Curry</td>
+                        <td style="padding:10px 8px;">Rice, Moru Curry, Cabbage Thoran</td>
+                        <td style="padding:10px 8px;">Lemon Rice, Egg Curry</td>
+                    </tr>
+                    <tr style="background:#faf8e6;">
+                        <td style="padding:10px 8px;">Thursday</td>
+                        <td style="padding:10px 8px;">Upma, Banana</td>
+                        <td style="padding:10px 8px;">Rice, Sambar, Carrot Thoran</td>
+                        <td style="padding:10px 8px;">Chapathi, Chana Masala</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px 8px;">Friday</td>
+                        <td style="padding:10px 8px;">Appam, Stew</td>
+                        <td style="padding:10px 8px;">Rice, Dal, Beetroot Thoran</td>
+                        <td style="padding:10px 8px;">Fried Rice, Paneer Curry</td>
+                    </tr>
+                    <tr style="background:#faf8e6;">
+                        <td style="padding:10px 8px;">Saturday</td>
+                        <td style="padding:10px 8px;">Poori, Potato Masala</td>
+                        <td style="padding:10px 8px;">Rice, Sambar, Cabbage Thoran</td>
+                        <td style="padding:10px 8px;">Lemon Rice, Veg Curry</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px 8px;">Sunday</td>
+                        <td style="padding:10px 8px;">Idli, Chutney</td>
+                        <td style="padding:10px 8px;">Rice, Chicken Curry, Veg Sides</td>
+                        <td style="padding:10px 8px;">Chapathi, Egg Curry</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+  
+    <!-- WARDEN -->
+    <section id="warden">
+        <div class="section-title">
+            <h2>Administration</h2>
+        </div>
+        <p style="max-width:700px;margin:0 auto 36px auto;font-size:17px;text-align:center;color:#444;">
+            Our dedicated administration team ensures the smooth functioning of the hostel and is always available to address the needs and concerns of our residents.
+        </p>
+            <div class="grid">
+                <div class="card card-animate">
+                    <h3>Hostel Manager</h3>
+                    <p>Priya Sharma</p>
+                    <p style="font-size:14px;color:#666;">Email: priya.sharma@hostel.com<br>Phone: +91 98765 43210</p>
+                </div>
+                <div class="card card-animate">
+                    <h3>Warden</h3>
+                    <p>Rohit Verma</p>
+                    <p style="font-size:14px;color:#666;">Email: rohit.verma@hostel.com<br>Phone: +91 91234 56789</p>
+                </div>
+                <div class="card card-animate">
+                    <h3>Accounts Officer</h3>
+                    <p>Anjali Mehta</p>
+                    <p style="font-size:14px;color:#666;">Email: anjali.mehta@hostel.com<br>Phone: +91 99887 65432</p>
+                </div>
+            </div>
+    </section>
+
+    <!-- COMPLAINT -->
+    <section id="complaint">
+        <div class="section-title">
+            <h2>Complaint Form</h2>
+        </div>
+        <p style="max-width:700px;margin:0 auto 36px auto;font-size:17px;text-align:center;color:#444;">
+            We value your feedback and are committed to resolving any issues promptly. Please fill out the form below to submit your complaint or suggestion to the hostel administration.
+        </p>
+        <div style="max-width:600px;margin:auto">
+            <form class="contact-form">
+                <input type="text" placeholder="Student Name" required>
+                <input type="text" placeholder="Room Number" required>
+                <textarea rows="4" placeholder="Complaint" required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="section-title">
+            <h2>Contact &amp; Location</h2>
+        </div>
+        <p style="max-width:700px;margin:0 auto 36px auto;font-size:17px;text-align:center;color:#444;">
+            Have questions or need assistance? Reach out to us using the details below or visit our hostel at the address provided. We are here to help you!
+        </p>
+        <div class="grid">
+            <div class="card card-animate">
+                <h3>Address</h3>
+                <p>GWPC Hostel, Kayamkulam, Kerala - 690502</p>
+            </div>
+            <div class="card card-animate">
+                <h3>Phone</h3>
+                <p>+91 9496854574</p>
+            </div>
+            <div class="card card-animate">
+                <h3>Email</h3>
+                <p>hostel@gwpc.edu.in</p>
+            </div>
+        </div>
+        <br><br>
+        <iframe
+            src="https://maps.google.com/maps?q=Government%20Womens%20Polytechnic%20College%20Kayamkulam&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Government Women's Polytechnic College Hostel | Kayamkulam</p>
+    </footer>
+
+    <script>
+
+            // Optimized SNOWFALL ANIMATION
+            document.addEventListener('DOMContentLoaded', function() {
+                const snowContainer = document.querySelector('.snow-container');
+                if (snowContainer) {
+                    let styleSheet = document.createElement('style');
+                    let keyframes = '';
+                    for (let i = 0; i < 30; i++) {
+                        let snow = document.createElement('div');
+                        snow.classList.add('snowflake');
+                        snow.innerHTML = '•';
+                        snow.style.position = 'absolute';
+                        snow.style.left = Math.random() * 100 + 'vw';
+                        snow.style.top = Math.random() * -40 + 'vh';
+                        snow.style.opacity = 0.3 + Math.random() * 0.5;
+                        snow.style.fontSize = (7 + Math.random() * 8) + 'px';
+                        snow.style.color = '#fff';
+                        let duration = 4 + Math.random() * 6;
+                        snow.style.animation = `fall${i} ${duration}s linear infinite`;
+                        keyframes += `@keyframes fall${i} { 0% { transform: translateY(0); } 100% { transform: translateY(${100 + Math.random() * 20}vh); } }\n`;
+                        snowContainer.appendChild(snow);
+                    }
+                    styleSheet.innerHTML = keyframes;
+                    document.head.appendChild(styleSheet);
+                }
+            });
+
+
+        // Unified scroll-triggered animation handler
+        function animateAllCards() {
+            document.querySelectorAll('.fade-in, .card-animate, .feature-card, .facility-card, .room-card').forEach((card, idx) => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.92) {
+                    setTimeout(() => card.classList.add('visible'), idx * 120);
+                }
+            });
+        }
+        window.addEventListener('scroll', animateAllCards);
+        window.addEventListener('DOMContentLoaded', animateAllCards);
+
+        // Stats Counter Animation
+        function animateStats() {
+            document.querySelectorAll('.stat-number').forEach(stat => {
+                const rect = stat.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.92 && !stat.classList.contains('counted')) {
+                    stat.classList.add('counted');
+                    let target = +stat.getAttribute('data-count');
+                    let count = 0;
+                    let inc = Math.ceil(target / 60);
+                    function update() {
+                        count += inc;
+                        if (count > target) count = target;
+                        stat.textContent = count;
+                        if (count < target) requestAnimationFrame(update);
+                    }
+                    update();
+                }
+            });
+        }
+        window.addEventListener('scroll', animateStats);
+        window.addEventListener('DOMContentLoaded', animateStats);
+
+        // TESTIMONIALS SLIDER (with existence check)
+        const testimonialTrack = document.getElementById('testimonialTrack');
+        const testimonialNav = document.getElementById('testimonialNav');
+        const testimonialCards = testimonialTrack ? testimonialTrack.children : [];
+        let tIndex = 0;
+        function updateTestimonialSlider(idx) {
+            if (!testimonialTrack || !testimonialNav) return;
+            testimonialTrack.style.transform = 'translateX(-' + (idx * 100) + '%)';
+            Array.from(testimonialNav.children).forEach((dot, i) => {
+                dot.classList.toggle('active', i === idx);
+            });
+        }
+        if (testimonialNav && testimonialCards.length) {
+            for (let i = 0; i < testimonialCards.length; i++) {
+                let dot = document.createElement('div');
+                dot.className = 'testimonial-dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => { tIndex = i; updateTestimonialSlider(i); };
+                testimonialNav.appendChild(dot);
+            }
+            setInterval(() => {
+                tIndex = (tIndex + 1) % testimonialCards.length;
+                updateTestimonialSlider(tIndex);
+            }, 4000);
+        }
+
+        // SMOOTH SCROLL FOR INDICATOR
+        document.querySelectorAll('.scroll-indicator').forEach(ind => {
+            ind.addEventListener('click', () => {
+                const next = document.querySelector('.features-section');
+                if (next) next.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+                        // TYPING ANIMATION FOR HERO
+                        function typeText(element, textArr, speed = 60, pause = 1200, loop = true) {
+                            let i = 0, j = 0, isDeleting = false, current = '', cursor = '<span class="typed-cursor">&nbsp;</span>';
+                            function type() {
+                                let full = textArr[i];
+                                if (!isDeleting) {
+                                    current = full.substring(0, j++);
+                                    element.innerHTML = current + cursor;
+                                    if (j > full.length) {
+                                        isDeleting = true;
+                                        setTimeout(type, pause);
+                                    } else {
+                                        setTimeout(type, speed);
+                                    }
+                                } else {
+                                    current = full.substring(0, j--);
+                                    element.innerHTML = current + cursor;
+                                    if (j < 0) {
+                                        isDeleting = false;
+                                        i = (i + 1) % textArr.length;
+                                        setTimeout(type, 600);
+                                    } else {
+                                        setTimeout(type, speed / 2);
+                                    }
+                                }
+                            }
+                            type();
+                        }
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const heroTyping = document.getElementById('heroTyping');
+                            typeText(heroTyping, [
+                                "College Women's Hostel",
+                                "A Home Away From Home",
+                                "Empowering Women, Enriching Lives"
+                            ], 60, 1400, true);
+                        });
+
+
+        // HERO CAROUSEL
+        const track = document.querySelector('.carousel-track');
+        const slides = Array.from(track.children);
+        const nextBtn = document.querySelector('.next');
+        const prevBtn = document.querySelector('.prev');
+        let index = 0;
+        function update() {
+            track.style.transform = 'translateX(-' + index * 100 + '%)';
+        }
+        nextBtn.onclick = () => {
+            index = (index + 1) % slides.length;
+            update();
+        };
+        prevBtn.onclick = () => {
+            index = (index - 1 + slides.length) % slides.length;
+            update();
+        };
+        setInterval(() => {
+            index = (index + 1) % slides.length;
+            update();
+        }, 4000);
+
+        // REVIEW AUTO SLIDE
+        const reviewTrack = document.getElementById("reviewTrack");
+        let rIndex = 0;
+        setInterval(() => {
+            rIndex = (rIndex + 1) % 3;
+            reviewTrack.style.transform = "translateX(-" + (rIndex * 320) + "px)";
+        }, 3000);
+
+        // SNOW
+        const snowContainer = document.querySelector('.snow-container');
+        for (let i = 0; i < 70; i++) {
+            let snow = document.createElement('div');
+            snow.classList.add('snowflake');
+            snow.innerHTML = "•";
+            snow.style.left = Math.random() * 100 + "vw";
+            snow.style.animationDuration = (3 + Math.random() * 5) + "s";
+            snow.style.opacity = Math.random();
+            snow.style.fontSize = (5 + Math.random() * 6) + "px";
+            snowContainer.appendChild(snow);
+        }
+
+      
+        // Animate all card-animate elements (Administration + Contact)
+        function animateGeneralCards() {
+            document.querySelectorAll('.card-animate').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.92) {
+                    card.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', animateGeneralCards);
+        window.addEventListener('DOMContentLoaded', animateGeneralCards);
+    </script>
+
+</body>
+</html>

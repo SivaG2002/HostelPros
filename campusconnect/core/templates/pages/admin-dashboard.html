@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - CampusConnect</title>
+<link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+
+<style>
+.brand-font {
+font-family: "Bitcount Grid Double", system-ui;
+font-size: medium;
+font-weight: 100;
+letter-spacing: 2px;
+}
+
+
+body {
+font-family: 'Inter', sans-serif;
+transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Sidebar */
+#sidebar {
+width: 250px;
+}
+
+/* Cards */
+.card {
+background: white;
+border: 1px solid black;
+border-radius: 12px;
+padding: 1.25rem;
+}
+
+/* Buttons */
+.button, .logout-btn {
+background: black;
+color: white;
+padding: 0.6rem 1rem;
+border-radius: 8px;
+text-align: center;
+transition: opacity 0.2s ease;
+}
+
+.button:hover, .logout-btn:hover {
+opacity: 0.85;
+}
+
+/* Dark Mode */
+.dark-mode {
+background: #0f172a;
+color: white;
+}
+
+.dark-mode .card {
+background: #1e293b;
+border: 1px solid black;
+}
+
+.dark-mode .button,
+.dark-mode .logout-btn {
+background: black;
+color: white;
+}
+</style>
+</head>
+
+<body class="flex">
+
+<script src="{% static 'js/app.js' %}?v=2"></script>
+<script>
+checkAuthAndRedirect();
+</script>
+
+<!-- Sidebar -->
+<aside id="sidebar"
+class="fixed top-0 left-0 h-full bg-black text-white p-6 flex flex-col justify-between transform transition-transform duration-300">
+
+<div>
+<div class="flex items-center gap-3 mb-8">
+<img src="{% static 'assets/logo/lo.jpg' %}" class="w-10 h-10 object-contain">
+<span class="text-lg text-white brand-font">CampusConnect</span>
+</div>
+
+<nav class="flex flex-col gap-4">
+<a href="/dashboard/admin_dashboard/">Dashboard</a>
+<a href="/dashboard/admin_dashboard/students.html">Students</a>
+<a href="/dashboard/admin_dashboard/rooms.html">Rooms</a>
+<a href="/dashboard/admin_dashboard/fees.html">Fees</a>
+<a href="/dashboard/admin_dashboard/notices.html">Notices</a>
+<a href="/dashboard/admin_dashboard/complaints.html">Complaints</a>
+
+</nav>
+</div>
+
+<button class="logout-btn mt-6" onclick="logout()">Logout</button>
+
+</aside>
+
+<!-- Main Content -->
+<div id="mainContent" class="flex-1 ml-[250px] p-8 transition-all duration-300">
+
+<div class="flex items-center mb-8 relative">
+
+<!-- Left -->
+<button onclick="toggleSidebar()" class="button">
+☰
+</button>
+
+<!-- Center -->
+<h1 class="absolute left-1/2 transform -translate-x-1/2 text-2xl font-semibold">
+Admin Dashboard
+</h1>
+
+<!-- Right -->
+<div class="ml-auto">
+<label class="flex items-center cursor-pointer">
+<input type="checkbox" id="themeToggle" class="hidden">
+<div class="w-12 h-6 bg-gray-300 rounded-full relative transition">
+<div id="toggleCircle"
+class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition">
+</div>
+</div>
+</label>
+</div>
+
+</div>
+
+<div id="error-container"></div>
+
+<div id="loading" class="flex items-center gap-2 mb-6 hidden">
+Loading dashboard...
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-4 gap-6 mb-6" id="stats-container"></div>
+
+<!-- Sections -->
+<div class="grid grid-cols-2 gap-6" id="sections-container"></div>
+
+</div>
+
+<script>
+setActiveNavLink("dashboard");
+
+/* Sidebar Toggle Logic (60fps GPU transform) */
+const sidebar = document.getElementById("sidebar");
+const mainContent = document.getElementById("mainContent");
+let isOpen = true;
+
+function toggleSidebar() {
+if (isOpen) {
+sidebar.style.transform = "translateX(-100%)";
+mainContent.style.marginLeft = "0";
+} else {
+sidebar.style.transform = "translateX(0)";
+mainContent.style.marginLeft = "250px";
+}
+isOpen = !isOpen;
+}
+
+/* Dashboard Logic (UNCHANGED) */
+async function loadDashboard() {
+const loadingEl = document.getElementById("loading");
+loadingEl.style.display = "flex";
+
+const data = await fetchDashboardData();
+loadingEl.style.display = "none";
+
+if (!data) {
+showError("Failed to load dashboard data");
+return;
+}
+
+const statsHtml = `
+<div class="card shadow-sm">
+<div class="flex justify-between items-center">
+<div>
+<div>Total Students</div>
+<div class="text-xl font-bold">${data.total_students || 0}</div>
+</div>
+<img src="{% static 'assets/img/student.png' %}" width="28">
+</div>
+</div>
+
+<div class="card shadow-sm">
+<div class="flex justify-between items-center">
+<div>
+<div>Available Rooms</div>
+<div class="text-xl font-bold">${data.available_rooms || 0}</div>
+</div>
+<img src="{% static 'assets/img/bed.png' %}" width="28">
+</div>
+</div>
+
+<div class="card shadow-sm">
+<div class="flex justify-between items-center">
+<div>
+<div>Pending Complaints</div>
+<div class="text-xl font-bold">${data.pending_complaints || 0}</div>
+</div>
+<img src="{% static 'assets/img/complain.png' %}" width="28">
+</div>
+</div>
+
+<div class="card shadow-sm">
+<div class="flex justify-between items-center">
+<div>
+<div>Pending Fees</div>
+<div class="text-xl font-bold">${formatCurrency(data.pending_fees || 0)}</div>
+</div>
+<img src="{% static 'assets/img/hand.png' %}" width="28">
+</div>
+</div>
+`;
+
+document.getElementById("stats-container").innerHTML = statsHtml;
+
+const sectionsHtml = `
+<div class="card">
+<div class="mb-4 font-semibold">Quick Stats</div>
+<div class="space-y-3">
+<div class="flex justify-between"><span>Occupied Rooms</span><strong>${data.occupied_rooms || 0}</strong></div>
+<div class="flex justify-between"><span>Total Rooms</span><strong>${data.total_rooms || 0}</strong></div>
+<div class="flex justify-between"><span>Complaints Resolved</span><strong>${data.resolved_complaints || 0}</strong></div>
+</div>
+</div>
+
+<div class="card">
+<div class="mb-4 font-semibold">Quick Actions</div>
+<div class="space-y-3">
+<a href="/dashboard/admin_dashboard/students.html" class="button w-full">Add Student</a>
+<a href="/dashboard/admin_dashboard/rooms.html" class="button w-full">Add Room</a>
+<a href="/dashboard/admin_dashboard/notices.html" class="button w-full">Create Notice</a>
+</div>
+</div>
+`;
+
+document.getElementById("sections-container").innerHTML = sectionsHtml;
+}
+
+loadDashboard();
+
+/* Dark Mode Toggle */
+const toggle = document.getElementById("themeToggle");
+const circle = document.getElementById("toggleCircle");
+
+toggle.addEventListener("change", () => {
+document.body.classList.toggle("dark-mode");
+circle.style.transform = toggle.checked ? "translateX(24px)" : "translateX(0)";
+});
+</script>
+
+</body>
+</html>

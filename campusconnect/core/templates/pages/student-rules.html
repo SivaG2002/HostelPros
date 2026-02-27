@@ -1,0 +1,240 @@
+{% load static %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hostel Rules - CampusConnect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+
+<style>
+  
+  .brand-font {
+font-family: "Bitcount Grid Double", system-ui;
+font-size: medium;
+font-weight: 100;
+letter-spacing: 2px;
+}
+body {
+font-family: 'Inter', sans-serif;
+transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Sidebar */
+#sidebar { width: 250px; }
+
+/* Cards */
+.card {
+background: white;
+border: 1px solid black;
+border-radius: 12px;
+padding: 1.25rem;
+}
+
+/* Scroll container */
+.scroll-container {
+max-height: 80vh;
+overflow-y: auto;
+padding-right: 8px;
+}
+
+/* Buttons */
+.button, .logout-btn {
+background: black;
+color: white;
+padding: 0.6rem 1rem;
+border-radius: 8px;
+transition: opacity 0.2s ease;
+}
+
+.button:hover, .logout-btn:hover {
+opacity: 0.85;
+}
+
+/* Dark Mode */
+.dark-mode {
+background: #0f172a;
+color: white;
+}
+
+.dark-mode .card {
+background: #1e293b;
+border: 1px solid black;
+}
+
+.dark-mode .card p,
+.dark-mode .card li {
+color: #e2e8f0;
+}
+</style>
+</head>
+
+<body class="flex">
+
+<script src="{% static 'js/app.js' %}?v=2"></script>
+<script>
+const userId = window.location.pathname.split('/')[3];
+</script>
+<script>
+checkAuthAndRedirect();
+if (getUserRole() !== "student") {
+window.location.href = "admin-dashboard.html";
+}
+</script>
+
+<!-- Sidebar -->
+<aside id="sidebar"
+class="fixed top-0 left-0 h-full bg-black text-white p-6 flex flex-col justify-between transform transition-transform duration-300">
+
+<div>
+<div class="flex items-center gap-3 mb-8">
+<img src="{% static 'assets/logo/lo.jpg' %}" class="w-10 h-10 object-contain">
+<span class="text-lg text-white brand-font">CampusConnect</span>
+</div>
+
+<nav class="flex flex-col gap-4" id="student-nav"></nav>
+<script>
+document.getElementById('student-nav').innerHTML = `
+<a href="/student/dashboard/${userId}/">Dashboard</a>
+<a href="/student/dashboard/${userId}/rules.html" class="font-semibold">Rules</a>
+<a href="/student/dashboard/${userId}/fees.html">Fees</a>
+<a href="/student/dashboard/${userId}/notices.html">Notices</a>
+<a href="/student/dashboard/${userId}/complaints.html">Complaints</a>
+`;
+</script>
+</div>
+
+<button class="logout-btn mt-6" onclick="logout()">Logout</button>
+</aside>
+
+<!-- Main Content -->
+<div id="mainContent" class="flex-1 ml-[250px] p-8 transition-all duration-300">
+
+<!-- Top Bar -->
+<div class="flex items-center mb-8 relative">
+
+<button onclick="toggleSidebar()" class="button">☰</button>
+
+<h1 class="absolute left-1/2 transform -translate-x-1/2 text-2xl font-semibold">
+Hostel Rules & Regulations
+</h1>
+
+<div class="ml-auto">
+<label class="flex items-center cursor-pointer">
+<input type="checkbox" id="themeToggle" class="hidden">
+<div class="w-12 h-6 bg-gray-300 rounded-full relative transition">
+<div id="toggleCircle"
+class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition">
+</div>
+</div>
+</label>
+</div>
+</div>
+
+<!-- Scrollable Content -->
+<div class="scroll-container space-y-6">
+
+<!-- General Rules -->
+<div class="card">
+<h2 class="text-lg font-semibold mb-4">📋 General Rules</h2>
+<ul class="space-y-4">
+<li><strong>1. Curfew Timing:</strong> All students must be in their rooms by 10:00 PM (weekdays) and 11:00 PM (weekends).</li>
+<li><strong>2. Guest Policy:</strong> Guests allowed 10:00 AM – 6:00 PM. Weekend parental visits require prior intimation.</li>
+<li><strong>3. Room Cleanliness:</strong> Rooms must be kept clean. Weekly inspections will be conducted.</li>
+<li><strong>4. Electronic Appliances:</strong> Only registered appliances allowed. Heavy load devices are prohibited.</li>
+</ul>
+</div>
+
+<!-- Conduct -->
+<div class="card">
+<h2 class="text-lg font-semibold mb-4">🤝 Code of Conduct</h2>
+<ul class="space-y-4">
+<li><strong>1. Respect & Discipline:</strong> Maintain respectful behavior towards staff and residents.</li>
+<li><strong>2. No Loud Noise:</strong> Quiet hours from 10:00 PM – 7:00 AM.</li>
+<li><strong>3. Substance Prohibition:</strong> Smoking, alcohol, and drugs strictly prohibited.</li>
+<li><strong>4. Item Safety:</strong> Hostel not responsible for personal belongings.</li>
+</ul>
+</div>
+
+<!-- Safety -->
+<div class="card">
+<h2 class="text-lg font-semibold mb-4">🚨 Safety & Emergency</h2>
+<ul class="space-y-4">
+<li><strong>1. Emergency Evacuation:</strong> Know exits and participate in drills.</li>
+<li><strong>2. Fire Safety:</strong> Do not tamper with safety equipment.</li>
+<li><strong>3. Medical Emergency:</strong> Report emergencies to warden immediately.</li>
+</ul>
+</div>
+
+<!-- Mess -->
+<div class="card">
+<h2 class="text-lg font-semibold mb-4">🍽️ Mess Management</h2>
+<ul class="space-y-4">
+<li><strong>1. Meal Timings:</strong> Breakfast 7:00–8:30 | Lunch 1:00–2:00 | Dinner 7:30–9:00</li>
+<li><strong>2. Leave Intimation:</strong> Inform warden 2 days prior for mess leave.</li>
+<li><strong>3. Dietary Restrictions:</strong> Special dietary requests available upon registration.</li>
+</ul>
+</div>
+
+<!-- Fees -->
+<div class="card">
+<h2 class="text-lg font-semibold mb-4">💰 Fees & Payment</h2>
+<ul class="space-y-4">
+<li><strong>1. Payment Due:</strong> Fees due by 10th of every month.</li>
+<li><strong>2. Late Payment:</strong> Late fees apply after due date.</li>
+<li><strong>3. Damage Charges:</strong> Property damage charged to student account.</li>
+</ul>
+</div>
+
+<!-- Grievance -->
+<div class="card">
+<h2 class="text-lg font-semibold mb-4">📞 Grievance Redressal</h2>
+<p>If you have complaints:</p>
+<ul class="list-disc ml-6 space-y-2">
+<li>Contact block warden</li>
+<li>File complaint online</li>
+<li>Visit hostel administration office</li>
+</ul>
+<div class="mt-4 p-4 border rounded">
+<strong>Admin Office:</strong> Block A, Ground Floor  
+<br><strong>Phone:</strong> +91-9876-543-210
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+setActiveNavLink("rules");
+
+/* Sidebar Toggle */
+const sidebar = document.getElementById("sidebar");
+const mainContent = document.getElementById("mainContent");
+let isOpen = true;
+
+function toggleSidebar() {
+if (isOpen) {
+sidebar.style.transform = "translateX(-100%)";
+mainContent.style.marginLeft = "0";
+} else {
+sidebar.style.transform = "translateX(0)";
+mainContent.style.marginLeft = "250px";
+}
+isOpen = !isOpen;
+}
+
+/* Dark Mode */
+const toggle = document.getElementById("themeToggle");
+const circle = document.getElementById("toggleCircle");
+
+toggle.addEventListener("change", () => {
+document.body.classList.toggle("dark-mode");
+circle.style.transform = toggle.checked ? "translateX(24px)" : "translateX(0)";
+});
+</script>
+
+</body>
+</html>

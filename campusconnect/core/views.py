@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 
 # ---------------- LOGIN ----------------
 @api_view(['POST'])
-def login_view(request):
+def login_api(request):
     email = request.data.get("email")
     password = request.data.get("password")
 
@@ -784,3 +784,53 @@ def download_receipt(request, fee_id):
     response['Content-Disposition'] = f'attachment; filename="GWPC_Receipt_{fee.id}.pdf"'
 
     return response
+
+
+
+from django.shortcuts import render
+
+def index(request):
+    return render(request, "index.html")
+
+
+def login_page(request):
+    return render(request, "login.html")
+
+
+def admin_dashboard_page(request):
+    return render(request, "pages/admin-dashboard.html")
+
+
+def student_dashboard_page(request, user_id):
+    return render(request, "pages/student-dashboard.html")
+
+
+# Admin Pages
+def students_page(request):
+    return render(request, "pages/students.html")
+
+def rooms_page(request):
+    return render(request, "pages/rooms.html")
+
+def complaints_page(request):
+    return render(request, "pages/complaints.html")
+
+def notices_page(request):
+    return render(request, "pages/notices.html")
+
+def fees_page(request):
+    return render(request, "pages/fees.html")
+
+
+# Student Pages
+def student_complaints_page(request, user_id):
+    return render(request, "pages/student-complaints.html")
+
+def student_notices_page(request, user_id):
+    return render(request, "pages/student-notices.html")
+
+def student_fees_page(request, user_id):
+    return render(request, "pages/student-fees.html")
+
+def student_rules_page(request, user_id):
+    return render(request, "pages/student-rules.html")
