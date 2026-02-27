@@ -25,13 +25,10 @@ call venv\Scripts\activate
 echo.
 echo Starting Django development server...
 echo.
-cd ..
-cd hostel-static
 
-cd ..
 cd campusconnect
 REM Open browser
-start http://127.0.0.1:5500/hostel-static/index.html
+start http://localhost:8000/
 REM Run server
 python manage.py runserver
 
