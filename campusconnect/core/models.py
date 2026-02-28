@@ -1,6 +1,9 @@
 from django.db import models
 
 
+
+# <-------------User Model------------->
+
 class User(models.Model):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
@@ -15,11 +18,16 @@ class User(models.Model):
     is_active = models.BooleanField(default=True)
 
 
+# <-------------Room Model------------->
+
+
 class Room(models.Model):
     roomNo = models.CharField(max_length=10)
     capacity = models.IntegerField()
     occupied = models.IntegerField(default=0)
 
+
+# <-------------Student Model------------->
 
 class Student(models.Model):
     user = models.OneToOneField(
@@ -34,6 +42,10 @@ class Student(models.Model):
     )
     roll_no = models.CharField(max_length=50)
 
+
+
+# <-------------Complaint Model------------->
+
 class Complaint(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -42,6 +54,9 @@ class Complaint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+
+
+# <-------------Notice Model------------->
 
 class Notice(models.Model):
     CATEGORY_CHOICES = [
@@ -58,6 +73,10 @@ class Notice(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+
+# <-------------Fee Model------------->    
 
 class Fee(models.Model):
     student = models.ForeignKey(

@@ -14,9 +14,13 @@ import razorpay
 import io
 import os
 from datetime import datetime, timezone
+from django.shortcuts import render
+
+
 
 
 # ---------------- LOGIN ----------------
+
 @api_view(['POST'])
 def login_api(request):
     email = request.data.get("email")
@@ -34,6 +38,7 @@ def login_api(request):
 
 
 # ---------------- ADMIN DASHBOARD ----------------
+
 @api_view(['GET'])
 def admin_dashboard(request):
 
@@ -72,6 +77,9 @@ def admin_dashboard(request):
     })
 
 
+# ---------------- Calculate available rooms ----------------
+
+
 @api_view(['GET'])
 def available_rooms(request):
     rooms = Room.objects.all()
@@ -91,6 +99,10 @@ def available_rooms(request):
             })
 
     return Response(data)
+
+
+# ---------------- List Students ----------------
+
 
 @api_view(['GET'])
 def list_students(request):
@@ -113,6 +125,8 @@ def list_students(request):
     return Response(data)
 
 
+# ---------------- Delete Student ----------------
+
 
 @api_view(['DELETE'])
 def delete_student(request, student_id):
@@ -123,6 +137,9 @@ def delete_student(request, student_id):
     except Student.DoesNotExist:
         return Response({"message": "Student not found"}, status=404)
     
+
+
+# ---------------- Toggle Student Status ----------------
 
 @api_view(['PUT'])
 def toggle_student_status(request, student_id):
@@ -140,6 +157,10 @@ def toggle_student_status(request, student_id):
 
     except Student.DoesNotExist:
         return Response({"message": "Student not found"}, status=404)
+    
+    
+# ---------------- Create Student ----------------
+
 @api_view(['POST'])
 def create_student(request):
 
@@ -185,25 +206,10 @@ def create_student(request):
 
 
 
-# @api_view(['GET'])
-# def list_rooms(request):
+                            # ---------------- ROOM MANAGEMENT ----------------
 
-#     rooms = Room.objects.all()
-#     data = []
 
-#     for r in rooms:
-#         occupied = Student.objects.filter(room=r).count()
-
-#         data.append({
-#             "id": r.id,
-#             "room_no": r.roomNo,
-#             "block": r.block,
-#             "floor": r.floor,
-#             "capacity": r.capacity,
-#             "occupied": occupied
-#         })
-
-#     return Response(data)
+# ---------------- Create Room ----------------
 
 @api_view(['POST'])
 def create_room(request):
@@ -223,6 +229,9 @@ def create_room(request):
     )
 
     return Response({"message": "Room created successfully"})
+
+
+# ---------------- Update Room ----------------
 
 @api_view(['PUT'])
 def update_room(request, room_id):
@@ -250,6 +259,11 @@ def update_room(request, room_id):
 
     except Room.DoesNotExist:
         return Response({"message": "Room not found"}, status=404)
+
+
+# ---------------- Unassign Student from Room ----------------
+
+
 @api_view(['PUT'])
 def unassign_student(request, student_id):
 
@@ -261,6 +275,10 @@ def unassign_student(request, student_id):
     except Student.DoesNotExist:
         return Response({"message": "Student not found"}, status=404)
     
+
+
+# ---------------- List Rooms ----------------
+
 @api_view(['GET'])
 def list_rooms(request):
 
@@ -292,6 +310,7 @@ def list_rooms(request):
 
 
 # ================= LIST ALL NOTICES =================
+
 @api_view(['GET'])
 def list_notices(request):
     notices = Notice.objects.all().order_by('-created_at')
@@ -310,6 +329,8 @@ def list_notices(request):
 
 
 # ================= CREATE NOTICE =================
+
+
 @api_view(['POST'])
 def create_notice(request):
     title = request.data.get('title')
@@ -332,6 +353,7 @@ def create_notice(request):
 
 
 # ================= DELETE NOTICE =================
+
 @api_view(['DELETE'])
 def delete_notice(request, notice_id):
     try:
@@ -357,7 +379,9 @@ def update_complaint_status(request, complaint_id):
         return Response({"message": "Status updated successfully"})
     except Complaint.DoesNotExist:
         return Response({"message": "Complaint not found"}, status=404)    
-    
+
+
+# ---------------- LIST COMPLAINTS ----------------
 
 @api_view(['GET'])
 def list_complaints(request):
@@ -379,6 +403,7 @@ def list_complaints(request):
 
 
 # ---------------- LIST FEES ----------------
+
 @api_view(['GET'])
 def list_fees(request):
 
@@ -401,6 +426,7 @@ def list_fees(request):
 
 
 # ---------------- MARK AS PAID ----------------
+
 @api_view(['PUT'])
 def mark_fee_paid(request, fee_id):
 
@@ -413,6 +439,8 @@ def mark_fee_paid(request, fee_id):
     except Fee.DoesNotExist:
         return Response({"message": "Fee not found"}, status=404)
     
+
+# ---------------- UPDATE FEE ----------------
 
 
 @api_view(['PUT'])
@@ -437,6 +465,8 @@ def update_fee(request, fee_id):
     except Fee.DoesNotExist:
         return Response({"message": "Fee not found"}, status=404)    
 
+
+# ---------------- CREATE FEE ----------------
 
 @api_view(['POST'])
 def create_fee(request):
@@ -463,6 +493,10 @@ def create_fee(request):
     )
 
     return Response({"message": "Fee created successfully"})
+
+
+
+# ---------------- STUDENT DASHBOARD ----------------
 
 @api_view(['GET'])
 def student_dashboard(request, user_id):
@@ -506,6 +540,10 @@ def student_dashboard(request, user_id):
     except User.DoesNotExist:
         return Response({"message": "Student not found"}, status=404)
 
+
+# ---------------- LATEST COMPLAINT & NOTICE ----------------
+
+
 @api_view(['GET'])
 def latest_complaint(request):
 
@@ -530,6 +568,9 @@ def latest_complaint(request):
     })
 
 
+
+# ---------------- LATEST NOTICE ----------------
+
 @api_view(['GET'])
 def latest_notice(request):
 
@@ -545,6 +586,11 @@ def latest_notice(request):
         "category": notice.category,
         "created_at": notice.created_at
     })
+
+
+
+# ---------------- STUDENT FEES & COMPLAINTS ----------------
+
 
 @api_view(['GET'])
 def student_fees(request, user_id):
@@ -565,6 +611,11 @@ def student_fees(request, user_id):
 
     return Response(data)
 
+
+
+# ---------------- STUDENT COMPLAINTS ----------------
+
+
 @api_view(['DELETE'])
 def delete_student(request, student_id):
 
@@ -579,6 +630,10 @@ def delete_student(request, student_id):
     except Student.DoesNotExist:
         return Response({"message": "Student not found"}, status=404)
     
+
+
+# ---------------- STUDENT COMPLAINTS ----------------
+
 @api_view(['GET'])
 def student_complaints(request, user_id):
 
@@ -593,6 +648,11 @@ def student_complaints(request, user_id):
     } for c in complaints]
 
     return Response(data)
+
+
+
+# ---------------- CREATE COMPLAINT ----------------
+
 
 @api_view(['POST'])
 def create_complaint(request):
@@ -614,7 +674,7 @@ def create_complaint(request):
     return Response({"message": "Complaint created successfully"})
 
 
-
+# ---------------- CREATE PAYMENT ORDER ----------------
 
 @api_view(['POST'])
 def create_payment_order(request, fee_id):
@@ -645,7 +705,9 @@ def create_payment_order(request, fee_id):
         return Response({"message": "Fee not found"}, status=404)
     
 
-from django.utils import timezone
+
+
+# ---------------- VERIFY PAYMENT ----------------
 
 @api_view(['POST'])
 def verify_payment(request):
@@ -689,6 +751,7 @@ def verify_payment(request):
         return Response({"message": "Verification failed"}, status=400)  
     
 
+# ---------------- DOWNLOAD RECEIPT ----------------
 
 
 @api_view(['GET'])
@@ -785,9 +848,8 @@ def download_receipt(request, fee_id):
 
     return response
 
+# ---------------- RENDER ----------------
 
-
-from django.shortcuts import render
 
 def index(request):
     return render(request, "index.html")

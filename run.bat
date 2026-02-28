@@ -1,5 +1,4 @@
 @echo off
-
 title Django Project Launcher
 
 echo ==========================================
@@ -21,18 +20,31 @@ cd campusconnect
 REM Activate virtual environment
 call venv\Scripts\activate
 
-
 echo.
 echo Starting Django development server...
 echo.
 
-cd campusconnect
-REM Open browser
-start http://localhost:8000/
-REM Run server
-python manage.py runserver
+REM Start server in background
+start "" cmd /k python manage.py runserver
 
+REM Wait for server to start
+timeout /t 3 >nul
 
+set URL=http://localhost:8000/
 
+REM Check common Chrome install locations
+if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
+    start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" "%URL%"
+    goto end
+)
 
+if exist "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" (
+    start "" "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" "%URL%"
+    goto end
+)
+
+REM If Chrome not found, open in default browser
+start "" "%URL%"
+
+:end
 pause

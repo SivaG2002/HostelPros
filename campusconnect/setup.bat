@@ -9,8 +9,10 @@ python -m venv venv
 echo Activating virtual environment...
 call venv\Scripts\activate
 
+echo Upgrading pip...
+python -m pip install --upgrade pip
+
 echo Installing dependencies...
-pip install --upgrade pip
 pip install -r requirements.txt
 
 echo Applying migrations...
@@ -19,22 +21,20 @@ python manage.py migrate
 echo Collecting static files...
 python manage.py collectstatic --noinput
 
+echo Creating default superuser if not exists...
 
-echo.
-echo Creating default superuser...
 
-REM ---- AUTO SUPERUSER SECTION ----
-set DJANGO_SUPERUSER_USERNAME=admin
-set DJANGO_SUPERUSER_EMAIL=admin@gmail.com
-set DJANGO_SUPERUSER_PASSWORD=admin123
+echo Creating fresh admin user...
 
-python manage.py createsuperuser --noinput
+python manage.py shell -c "from django.contrib.auth import get_user_model; User=get_user_model(); User.objects.filter(username='admin').delete(); User.objects.create_superuser('admin','a@gmail.com','admin123')"
+echo Starting server...
+start "" cmd /k python manage.py runserver
+
+timeout /t 3 >nul
 start http://127.0.0.1:8000/admin
-python manage.py runserve
 
 echo =====================================
 echo Setup Completed Successfully
-echo You can now run run_project.bat
 echo =====================================
 
 pause

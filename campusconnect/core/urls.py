@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('login/', views.login_api),
-    path('login/login/', views.login_api),  # Handle incorrect double "login" path from frontend
+    path('login/login/', views.login_api),  
 
     path('dashboard/admin_dashboard/', views.admin_dashboard),
     path('students/list_all/', views.list_students),
